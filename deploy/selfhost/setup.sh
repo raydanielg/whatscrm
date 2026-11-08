@@ -23,13 +23,21 @@ if [ -z "$PUBLIC_IP" ]; then
   exit 1
 fi
 
-# Pick free ports — this VPS may already run other apps on 80/8000.
+# Reuse ports already recorded in .env (they may be bound by our own running
+# stack); only auto-detect free ports on a fresh install.
 port_taken() { ss -tln 2>/dev/null | awk '{print $4}' | grep -q ":$1$"; }
 
-APP_PORT=80;   port_taken 80   && APP_PORT=8080
-SB_PORT=8000;  port_taken 8000 && SB_PORT=8100
-port_taken "$APP_PORT" && { echo "ERROR: ports 80 and 8080 both busy"; exit 1; }
-port_taken "$SB_PORT"  && { echo "ERROR: ports 8000 and 8100 both busy"; exit 1; }
+APP_PORT="$(grep '^APP_HTTP_PORT=' .env 2>/dev/null | cut -d= -f2- || true)"
+if [ -z "$APP_PORT" ]; then
+  APP_PORT=80; port_taken 80 && APP_PORT=8080
+  port_taken "$APP_PORT" && { echo "ERROR: ports 80 and 8080 both busy"; exit 1; }
+fi
+
+SB_PORT="$(grep '^API_GW_HTTP_PORT=' .env 2>/dev/null | cut -d= -f2- || true)"
+if [ -z "$SB_PORT" ]; then
+  SB_PORT=8000; port_taken 8000 && SB_PORT=8100
+  port_taken "$SB_PORT" && { echo "ERROR: ports 8000 and 8100 both busy"; exit 1; }
+fi
 
 APP_URL="http://${PUBLIC_IP}"; [ "$APP_PORT" != "80" ] && APP_URL="${APP_URL}:${APP_PORT}"
 SB_URL="http://${PUBLIC_IP}:${SB_PORT}"
