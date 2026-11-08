@@ -23,8 +23,16 @@ if [ -z "$PUBLIC_IP" ]; then
   exit 1
 fi
 
-APP_URL="http://${PUBLIC_IP}"
-SB_URL="http://${PUBLIC_IP}:8000"
+# Pick free ports — this VPS may already run other apps on 80/8000.
+port_taken() { ss -tln 2>/dev/null | awk '{print $4}' | grep -q ":$1$"; }
+
+APP_PORT=80;   port_taken 80   && APP_PORT=8080
+SB_PORT=8000;  port_taken 8000 && SB_PORT=8100
+port_taken "$APP_PORT" && { echo "ERROR: ports 80 and 8080 both busy"; exit 1; }
+port_taken "$SB_PORT"  && { echo "ERROR: ports 8000 and 8100 both busy"; exit 1; }
+
+APP_URL="http://${PUBLIC_IP}"; [ "$APP_PORT" != "80" ] && APP_URL="${APP_URL}:${APP_PORT}"
+SB_URL="http://${PUBLIC_IP}:${SB_PORT}"
 echo "==> Public IP:   $PUBLIC_IP"
 echo "==> App URL:     $APP_URL"
 echo "==> Supabase:    $SB_URL"
@@ -45,10 +53,16 @@ if [ ! -f .env ]; then
   rm -f .env.old
 fi
 
-set_env() { sed -i.bak -e "s|^$1=.*|$1=$2|" .env; }
+set_env() {
+  if grep -q "^$1=" .env; then sed -i.bak -e "s|^$1=.*|$1=$2|" .env
+  else echo "$1=$2" >> .env; fi
+}
 set_env COMPOSE_FILE "docker-compose.yml:docker-compose.app.yml"
 set_env SUPABASE_PUBLIC_URL "$SB_URL"
 set_env API_EXTERNAL_URL "$SB_URL"
+set_env API_GW_HTTP_PORT "$SB_PORT"
+set_env KONG_HTTP_PORT "$SB_PORT"
+set_env APP_HTTP_PORT "$APP_PORT"
 set_env SITE_URL "$APP_URL"
 set_env ADDITIONAL_REDIRECT_URLS "${APP_URL}/**"
 set_env ENABLE_EMAIL_AUTOCONFIRM "true"   # no real SMTP yet — confirm signups instantly
@@ -58,10 +72,13 @@ set_env STUDIO_DEFAULT_PROJECT "wacrm"
 rm -f .env.bak .env.old
 
 # Postgres must NOT be reachable from the internet — bind the pooler ports
-# to localhost. (Remote psql still works via SSH tunnel.)
+# to localhost on uncommon ports (55432/56543) to avoid clashing with any
+# existing Postgres. (Remote psql works via SSH tunnel.)
 sed -i.bak \
-  -e 's|${POSTGRES_PORT}:5432|127.0.0.1:${POSTGRES_PORT}:5432|' \
-  -e 's|${POOLER_PROXY_PORT_TRANSACTION}:6543|127.0.0.1:${POOLER_PROXY_PORT_TRANSACTION}:6543|' \
+  -e 's|127\.0\.0\.1:${POSTGRES_PORT}:5432|127.0.0.1:55432:5432|' \
+  -e 's|${POSTGRES_PORT}:5432|127.0.0.1:55432:5432|' \
+  -e 's|127\.0\.0\.1:${POOLER_PROXY_PORT_TRANSACTION}:6543|127.0.0.1:56543:6543|' \
+  -e 's|${POOLER_PROXY_PORT_TRANSACTION}:6543|127.0.0.1:56543:6543|' \
   docker-compose.yml
 rm -f docker-compose.yml.bak
 
@@ -117,6 +134,19 @@ INTERNAL_CRON_TOKEN=${CRON_TOKEN}
 # WA_QR_WEBHOOK_SECRET=$(openssl rand -hex 32)
 EOF
 fi
+
+# Keep URLs/keys in sync on re-runs (don't clobber user-added secrets).
+set_prod() {
+  if grep -q "^$1=" .env.production; then sed -i.bak -e "s|^$1=.*|$1=$2|" .env.production
+  else echo "$1=$2" >> .env.production; fi
+}
+set_prod APP_ORIGIN "$APP_URL"
+set_prod VITE_SUPABASE_URL "$SB_URL"
+set_prod SUPABASE_URL "$SB_URL"
+set_prod VITE_SUPABASE_PUBLISHABLE_KEY "$ANON_KEY_VAL"
+set_prod SUPABASE_PUBLISHABLE_KEY "$ANON_KEY_VAL"
+set_prod SUPABASE_SERVICE_ROLE_KEY "$SERVICE_KEY_VAL"
+rm -f .env.production.bak
 
 # ----------------------------------------------------------------- stack ----
 echo "==> Pulling Supabase images & building app (first run takes a while)..."
