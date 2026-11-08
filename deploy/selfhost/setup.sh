@@ -158,7 +158,7 @@ rm -f .env.production.bak
 
 # ----------------------------------------------------------------- stack ----
 echo "==> Pulling Supabase images & building app (first run takes a while)..."
-docker compose --env-file .env up -d
+docker compose --env-file .env up -d --build
 
 echo "==> Waiting for Postgres..."
 for i in $(seq 1 60); do
