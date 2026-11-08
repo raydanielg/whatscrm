@@ -1,0 +1,84 @@
+{
+  "expo": {
+    "name": "WACRM",
+    "slug": "wacrm",
+    "scheme": "wacrm",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wacrm.app",
+      "associatedDomains": [
+        "applinks:wacrm.app",
+        "applinks:app.wacrm.com"
+      ],
+      "infoPlist": {
+        "NSCameraUsageDescription": "Take photos, scan documents, and read QR/barcodes.",
+        "NSPhotoLibraryUsageDescription": "Attach media from your photo library.",
+        "NSPhotoLibraryAddUsageDescription": "Save captured photos and scanned documents.",
+        "NSMicrophoneUsageDescription": "Record voice notes for conversations.",
+        "NSFaceIDUsageDescription": "Use Face ID to unlock WACRM and protect workspace data.",
+        "NSLocationWhenInUseUsageDescription": "Attach your location to conversations and check-ins.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Track field visits and location-based automations.",
+        "NSContactsUsageDescription": "Import contacts into your CRM.",
+        "UIBackgroundModes": ["remote-notification", "fetch", "processing"]
+      }
+    },
+    "android": {
+      "package": "com.wacrm.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#075E54"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECORD_AUDIO",
+        "POST_NOTIFICATIONS",
+        "VIBRATE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            { "scheme": "https", "host": "wacrm.app", "pathPrefix": "/" },
+            { "scheme": "https", "host": "app.wacrm.com", "pathPrefix": "/" }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-notifications",
+      "expo-localization",
+      ["expo-local-authentication", { "faceIDPermission": "Use Face ID to unlock WACRM." }],
+      ["expo-image-picker", { "photosPermission": "Allow access to attach media." }],
+      ["expo-camera", { "cameraPermission": "Take photos, scan documents, and read QR/barcodes.", "microphonePermission": "Record voice notes and video." }],
+      ["expo-location", { "locationAlwaysAndWhenInUsePermission": "Attach your location to conversations and check-ins." }],
+      ["expo-contacts", { "contactsPermission": "Import contacts into your CRM." }]
+    ],
+    "experiments": { "typedRoutes": true },
+    "extra": {
+      "SUPABASE_URL": "https://qupmndmtvmttuemiakpf.supabase.co",
+      "SUPABASE_ANON_KEY": "sb_publishable_vIQQo4PPa-PbG3Zs-kz5vw_bdCne7Sh",
+      "API_BASE_URL": "https://wrapcoders.bid"
+    }
+  }
+}

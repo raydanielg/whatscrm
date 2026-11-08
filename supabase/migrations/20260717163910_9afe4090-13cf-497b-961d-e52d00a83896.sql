@@ -1,0 +1,1 @@
+ALTER TABLE public.workflow_run_steps ADD COLUMN IF NOT EXISTS attempts INTEGER NOT NULL DEFAULT 1;

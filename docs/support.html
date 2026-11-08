@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WACRM — Support</title>
+<meta name="description" content="Get help with WACRM: support channels, response times, what to include in a ticket, and answers to the most common setup questions." />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">W</span>
+    <div>
+      <div class="brand-name">WACRM Docs</div>
+      <div class="brand-ver">v6.8.9 · Support</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button id="themeBtn" class="ghost" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation pages">
+    <div class="nav-group">
+      <h4>Documentation</h4>
+      <ul>
+        <li><a href="./index.html">Documentation</a></li>
+        <li><a href="./changelog.html">Changelog</a></li>
+        <li><a href="./status.html">System Status</a></li>
+        <li><a href="./support.html">Support</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content" id="content">
+    <section id="support">
+      <h1>Support</h1>
+      <p class="lead">Help with installation, configuration, channel connections, and licensing for WACRM v6.8.9.</p>
+
+      <h2>Contact channels</h2>
+      <table>
+        <thead><tr><th>Channel</th><th>Best for</th><th>Response time</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://wrapcoders.com/" target="_blank" rel="noopener">WRAPCODERS support portal</a></td><td>Licensing, bugs, installation issues</td><td>Within 24–48 hours (business days)</td></tr>
+          <tr><td>CodeCanyon item comments</td><td>Pre-sale and general questions</td><td>Within 48 hours</td></tr>
+          <tr><td><a href="./index.html">Documentation</a></td><td>Setup, deployment, configuration</td><td>Instant</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Before you open a ticket</h2>
+      <ul>
+        <li>Confirm your version on the <a href="./changelog.html">Changelog</a> page and update if you are behind.</li>
+        <li>Check the <a href="./status.html">System Status</a> page and <em>Super Admin → System Health</em>.</li>
+        <li>Re-read the relevant section of the <a href="./index.html">documentation</a> — most issues are configuration related.</li>
+      </ul>
+
+      <h2>What to include</h2>
+      <ul>
+        <li>WACRM version and whether you run the hosted or self-hosted build.</li>
+        <li>Hosting environment (Node.js version, cPanel/LiteSpeed, Docker, etc.).</li>
+        <li>Exact steps to reproduce, plus the full error message or screenshot.</li>
+        <li>Browser console and server log output around the time of the error.</li>
+        <li>Affected channel (WhatsApp, Messenger, Instagram, Telegram, Live Chat, Email, SMS), if applicable.</li>
+      </ul>
+      <p><strong>Never share secrets.</strong> Do not paste API keys, app secrets, access tokens, database passwords, or service-role keys in a ticket.</p>
+
+      <h2>Scope of support</h2>
+      <ul>
+        <li><strong>Included:</strong> bug fixes, installation assistance, configuration guidance, and help with documented features.</li>
+        <li><strong>Not included:</strong> custom development, third-party plugin conflicts, server administration, and Meta/Telegram account approvals.</li>
+      </ul>
+
+      <h2>Common questions</h2>
+      <p><strong>Installation is stuck on license activation.</strong> Complete the Setup Wizard first — the super admin is bootstrapped before activation.</p>
+      <p><strong>WhatsApp messages fail with error #131030.</strong> The recipient is not in your Meta test-number allow list; add the number or move the app out of sandbox mode.</p>
+      <p><strong>Messenger or Instagram will not connect.</strong> Store your Meta App ID and Secret in the Meta App settings screen, then confirm the OAuth redirect URIs match exactly.</p>
+      <p><strong>How do I reset the setup wizard?</strong> Delete the <code>setup_complete</code> platform setting row, then reload the app.</p>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 WACRM · v6.8.9 · Built by <a href="https://wrapcoders.com/" target="_blank" rel="noopener">WRAPCODERS</a></div>
+      <div>
+        <a href="./index.html">Docs</a> ·
+        <a href="./changelog.html">Changelog</a> ·
+        <a href="./status.html">Status</a> ·
+        <a href="./support.html">Support</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>

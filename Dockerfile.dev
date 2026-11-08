@@ -1,0 +1,9 @@
+# Local dev image — mounts source and runs Vite dev server with HMR.
+FROM node:20-alpine
+WORKDIR /app
+RUN apk add --no-cache libc6-compat git && corepack enable
+ENV NODE_ENV=development \
+    HOST=0.0.0.0 \
+    PORT=8080
+EXPOSE 8080
+CMD ["sh","-c","(bun install || npm install) && npm run dev -- --host 0.0.0.0 --port 8080"]

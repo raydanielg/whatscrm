@@ -1,0 +1,21 @@
+REVOKE EXECUTE ON FUNCTION public.export_jobs_claim_batch(text, integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.outbox_claim_batch(text, integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.webhook_events_claim_batch(text, integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.wf_queue_lease(text, integer, integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.increment_webhook_failure(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.upsert_ai_usage_daily(uuid, date, uuid, text, integer, integer, integer, integer, numeric, integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.claim_expired_media(integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.ensure_personal_organization(uuid, text) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.contact_list_active_member_count(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.can_self_join_workspace(uuid, uuid, workspace_role) FROM anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION public.export_jobs_claim_batch(text, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.outbox_claim_batch(text, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.webhook_events_claim_batch(text, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.wf_queue_lease(text, integer, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.increment_webhook_failure(uuid) TO service_role;
+GRANT EXECUTE ON FUNCTION public.upsert_ai_usage_daily(uuid, date, uuid, text, integer, integer, integer, integer, numeric, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.claim_expired_media(integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.ensure_personal_organization(uuid, text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.contact_list_active_member_count(uuid) TO service_role;
+GRANT EXECUTE ON FUNCTION public.can_self_join_workspace(uuid, uuid, workspace_role) TO service_role;

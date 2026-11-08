@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WACRM — System Status</title>
+<meta name="description" content="Live operational status for WACRM services: application, omnichannel inbox, WhatsApp Cloud API, realtime, database, and background workers." />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">W</span>
+    <div>
+      <div class="brand-name">WACRM Docs</div>
+      <div class="brand-ver">v6.8.9 · Status</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button id="themeBtn" class="ghost" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation pages">
+    <div class="nav-group">
+      <h4>Documentation</h4>
+      <ul>
+        <li><a href="./index.html">Documentation</a></li>
+        <li><a href="./changelog.html">Changelog</a></li>
+        <li><a href="./status.html">System Status</a></li>
+        <li><a href="./support.html">Support</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content" id="content">
+    <section id="status">
+      <h1>System Status <span class="badge success">All systems operational</span></h1>
+      <p class="lead">Current operational state of every WACRM service. Self-hosted installations should verify these components in <em>Super Admin → System Health</em>.</p>
+
+      <h2>Services</h2>
+      <table>
+        <thead>
+          <tr><th>Service</th><th>Status</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Web application</td><td><span class="badge success">Operational</span></td><td>SSR + PWA delivery</td></tr>
+          <tr><td>Omnichannel Inbox</td><td><span class="badge success">Operational</span></td><td>Threading, assignment, SLA timers</td></tr>
+          <tr><td>WhatsApp Cloud API</td><td><span class="badge success">Operational</span></td><td>Inbound webhooks, outbound &amp; templates</td></tr>
+          <tr><td>Messenger &amp; Instagram</td><td><span class="badge success">Operational</span></td><td>Requires a verified Meta App</td></tr>
+          <tr><td>Telegram bots</td><td><span class="badge success">Operational</span></td><td>Multi-bot per workspace</td></tr>
+          <tr><td>Live Chat widget</td><td><span class="badge success">Operational</span></td><td>Realtime broadcast channel</td></tr>
+          <tr><td>Database &amp; RLS</td><td><span class="badge success">Operational</span></td><td>Row-level security enforced</td></tr>
+          <tr><td>Realtime</td><td><span class="badge success">Operational</span></td><td>Workspace-scoped subscriptions</td></tr>
+          <tr><td>Background workers</td><td><span class="badge success">Operational</span></td><td>Outbox delivery, sync jobs, QR worker</td></tr>
+          <tr><td>Billing &amp; payments</td><td><span class="badge success">Operational</span></td><td>Stripe / Paddle gateways</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Checking your own instance</h2>
+      <ul>
+        <li><strong>Super Admin → System Health</strong> — environment, database, storage, and worker checks.</li>
+        <li><strong>Settings → Channels</strong> — per-account connection badges for every channel.</li>
+        <li><strong>Security Issues</strong> — outstanding RLS and configuration findings.</li>
+      </ul>
+
+      <h2>Incident history</h2>
+      <p>Check your deployment's System Health panel for current service status and incident details.</p>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 WACRM · v6.8.9 · Built by <a href="https://wrapcoders.com/" target="_blank" rel="noopener">WRAPCODERS</a></div>
+      <div>
+        <a href="./index.html">Docs</a> ·
+        <a href="./changelog.html">Changelog</a> ·
+        <a href="./status.html">Status</a> ·
+        <a href="./support.html">Support</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>

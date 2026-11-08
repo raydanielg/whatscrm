@@ -1,0 +1,1807 @@
+import { Brand } from "@/components/brand";
+import { BRAND_NAME } from "@/lib/branding/brand";
+import { useState, useEffect, useRef, type ReactNode } from "react";
+import { docsUrl } from "@/lib/docs/links";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  MessagesSquare,
+  Sparkles,
+  Zap,
+  ShieldCheck,
+  BarChart3,
+  Users,
+  ArrowRight,
+  Check,
+  Github,
+  Server,
+  Bot,
+  Workflow,
+  Headphones,
+  CalendarClock,
+  Globe2,
+  Lock,
+  Star,
+  Quote,
+  Plug,
+  Database,
+  KeyRound,
+  Layers,
+  Megaphone,
+  Ticket,
+  Inbox,
+  X,
+  Clock,
+  TrendingUp,
+  GitBranch,
+  Store,
+  LifeBuoy,
+  Blocks,
+  Play,
+} from "lucide-react";
+import { ThemeSwitcher } from "@/components/app/theme-switcher";
+import { Button } from "@/components/ui/button";
+import { LeadCaptureForm } from "@/components/marketing/lead-capture-form";
+import { WhatsAppCtaButton, WhatsAppFloatingCta } from "@/components/marketing/whatsapp-cta-button";
+import { ctaAttrs, trackMarketing } from "@/lib/analytics/events";
+import { CurrentPlanBanner, CurrentPlanPill, isCurrentPlan } from "@/components/app/marketing/current-plan-badge";
+import {
+  formatPlanPrice,
+  isContactSalesPlan,
+  monthlyEquivalent,
+  planBullets,
+  useMyPlanSummary,
+  usePublicPlans,
+} from "@/lib/billing/public-plans";
+
+import landingLogo from "@/assets/landing-logo.png";
+import stepperInboxImg from "@/assets/marketing/stepper-inbox.jpg";
+import tourInboxImg from "@/assets/marketing/tour-inbox.jpg";
+import tourAutomationImg from "@/assets/marketing/tour-automation.jpg";
+import tourGrowthImg from "@/assets/marketing/tour-growth.jpg";
+import stepperFlowImg from "@/assets/marketing/stepper-flow.jpg";
+import stepperCampaignImg from "@/assets/marketing/stepper-campaign.jpg";
+import stepperBotImg from "@/assets/marketing/stepper-bot.jpg";
+import stepperEcommerceImg from "@/assets/marketing/stepper-ecommerce.jpg";
+import whyBeforeImg from "@/assets/marketing/why-before.jpg";
+import whyAfterImg from "@/assets/marketing/why-after.jpg";
+import integrationsChannelsImg from "@/assets/marketing/integrations-channels.jpg";
+import integrationsAiImg from "@/assets/marketing/integrations-ai.jpg";
+import integrationsBusinessImg from "@/assets/marketing/integrations-business.jpg";
+import securityRlsImg from "@/assets/marketing/security-rls.jpg";
+import security2faImg from "@/assets/marketing/security-2fa.jpg";
+import securityGdprImg from "@/assets/marketing/security-gdpr.jpg";
+import securityWebhooksImg from "@/assets/marketing/security-webhooks.jpg";
+import securityInfraImg from "@/assets/marketing/security-infra.jpg";
+import securityTenantImg from "@/assets/marketing/security-tenant.jpg";
+import roleSuperAdminImg from "@/assets/marketing/role-superadmin.jpg";
+import featureAutomationsImg from "@/assets/marketing/feature-automations.jpg";
+import featureBroadcastImg from "@/assets/marketing/feature-broadcast.jpg";
+import featureAnalyticsImg from "@/assets/marketing/feature-analytics.jpg";
+import featureHelpdeskImg from "@/assets/marketing/feature-helpdesk.jpg";
+import featureCommerceImg from "@/assets/marketing/feature-commerce.jpg";
+import featureAppointmentsImg from "@/assets/marketing/feature-appointments.jpg";
+import teamSalesImg from "@/assets/marketing/team-sales.jpg";
+import teamSupportImg from "@/assets/marketing/team-support.jpg";
+import teamMarketingImg from "@/assets/marketing/team-marketing.jpg";
+import roleAdminImg from "@/assets/marketing/role-admin.jpg";
+import roleManagerImg from "@/assets/marketing/role-manager.jpg";
+import roleAgentImg from "@/assets/marketing/role-agent.jpg";
+import roleProviderImg from "@/assets/marketing/role-provider.jpg";
+import rolePortalImg from "@/assets/marketing/role-portal.jpg";
+import roleDeveloperImg from "@/assets/marketing/role-developer.jpg";
+
+import { FaqSection } from "@/components/marketing/faq-section";
+import {
+  LANDING_DESCRIPTION,
+  LANDING_SOCIAL_DESCRIPTION,
+  LANDING_TITLE,
+  OG_IMAGE_URL,
+  SITE_URL,
+  landingJsonLd,
+} from "@/lib/marketing/landing-content";
+import { useTenantCurrency } from "@/hooks/use-currency";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: LANDING_TITLE },
+      { name: "description", content: LANDING_DESCRIPTION },
+      { property: "og:title", content: LANDING_TITLE },
+      { property: "og:description", content: LANDING_SOCIAL_DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:image", content: OG_IMAGE_URL },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "WhatsApp CRM shared inbox" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: LANDING_TITLE },
+      { name: "twitter:description", content: LANDING_SOCIAL_DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE_URL },
+      { name: "twitter:image:alt", content: "WhatsApp CRM shared inbox" },
+    ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(landingJsonLd()) }],
+  }),
+  component: LandingPage,
+});
+
+function LandingPage() {
+  return (
+    <div className="min-h-dvh bg-background">
+      <Nav />
+      <main>
+        <Hero />
+        <ChannelStrip />
+        <StackReplacement />
+        <Features />
+        <TeamUseCases />
+        <ProductTour />
+        <Stepper />
+        <Stats />
+        <HowItWorks />
+        <Roles />
+        <Integrations />
+        <Security />
+        <Testimonials />
+        <Pricing />
+        <FaqSection />
+        <CTA />
+      </main>
+      <Footer />
+      <WhatsAppFloatingCta message="Hi! I'm on the {site} site and would like a quick walkthrough." />
+    </div>
+  );
+}
+
+/* ============================================================ */
+/* Nav                                                          */
+/* ============================================================ */
+function Nav() {
+  const links = [
+    { href: "#features", label: "Features" },
+    { href: "#tour", label: "Product" },
+    { href: "#use-cases", label: "Solutions" },
+    { href: "#pricing", label: "Pricing" },
+    { href: "#demo", label: "Book a demo" },
+  ];
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+      <div className="container-marketing grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 h-18 md:flex md:justify-between py-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <img src={landingLogo} alt="logo" className="w-9 h-9 shrink-0 object-contain" />
+          <span className="font-display font-bold text-xl tracking-tight truncate leading-normal">
+            <Brand />
+          </span>
+        </div>
+        <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="link-marketing px-1"
+              {...ctaAttrs(`nav-${l.href.replace("#", "")}`, "nav", "nav_click", l.label)}
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden sm:block">
+            <ThemeSwitcher />
+          </div>
+          <Button asChild variant="ghost" size="default" className="hidden sm:inline-flex">
+            <Link to="/auth" {...ctaAttrs("sign-in", "nav")}>
+              Sign in
+            </Link>
+          </Button>
+          <Button asChild variant="primary" size="default">
+            <Link to="/auth" {...ctaAttrs("get-started", "nav")}>
+              Get started
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ============================================================ */
+/* Hero — split: promise left, live WhatsApp mockup right       */
+/* ============================================================ */
+function Hero() {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-hero opacity-95" />
+      <div className="absolute -right-40 top-10 w-[520px] h-[520px] rounded-full bg-whatsapp/15 blur-3xl" />
+      <div className="absolute -left-40 bottom-0 w-[420px] h-[420px] rounded-full bg-accent/20 blur-3xl" />
+      <div className="relative container-marketing py-20 lg:py-28">
+        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+          <div className="min-w-0">
+            <span className="chip-marketing-hero text-marketing-hero-eyebrow">
+              <Sparkles className="w-3 h-3" /> Official WhatsApp Cloud API · Self-hosted
+            </span>
+            <h1 className="text-marketing-hero-title mt-6">
+              Sell, support and market on <span className="text-hero-accent">WhatsApp</span> — from one inbox.
+            </h1>
+            <p className="text-marketing-hero-lede mt-6 max-w-xl">
+              <Brand /> turns WhatsApp into a full revenue channel: a shared team inbox, CRM pipeline, AI chatbots,
+              broadcast campaigns and a product catalog — on infrastructure you own.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild variant="primary" size="xl">
+                <Link to="/auth" {...ctaAttrs("start-free-trial", "hero")}>
+                  Start free trial <ArrowRight />
+                </Link>
+              </Button>
+              <Button asChild variant="heroGhost" size="xl">
+                <a href="#tour" {...ctaAttrs("see-the-product", "hero")}>
+                  <Play className="size-4" /> See the product
+                </a>
+              </Button>
+            </div>
+            <div className="text-marketing-hero-meta mt-10 grid gap-3 sm:grid-cols-2 max-w-lg">
+              {[
+                "No per-agent pricing",
+                "Multi-tenant workspaces",
+                "16 channels, one timeline",
+                "Deploy via Docker or Cloud",
+              ].map((t) => (
+                <span key={t} className="flex items-center gap-2">
+                  <Check className="w-4 h-4 shrink-0 text-hero-accent" /> {t}
+                </span>
+              ))}
+            </div>
+          </div>
+          <HeroMockup />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HeroMockup() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const slides = [
+    {
+      image: stepperInboxImg,
+      alt: "Smart Inbox — WhatsApp, Instagram, Messenger, Telegram, SMS, Email and Live Chat in one queue",
+    },
+    {
+      image: stepperFlowImg,
+      alt: "Flow Builder — visual no-code automation canvas",
+    },
+    {
+      image: stepperCampaignImg,
+      alt: "Campaigns & Webhooks — broadcast templates and segment analytics",
+    },
+    {
+      image: stepperBotImg,
+      alt: "Automation Flows & Chatbots — AI agents with knowledge base and human handoff",
+    },
+    {
+      image: stepperEcommerceImg,
+      alt: "Ecommerce & Shopify Integration — WhatsApp product cards and checkout",
+    },
+  ];
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % slides.length), 5000);
+    return () => clearInterval(id);
+  }, [paused, slides.length]);
+
+  return (
+    <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+      <div
+        className="relative overflow-hidden rounded-control bg-surface shadow-elegant"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
+        <div className="relative aspect-[4/3] w-full">
+          {slides.map((slide, i) => (
+            <img
+              key={i}
+              src={slide.image}
+              alt={slide.alt}
+              width={1024}
+              height={768}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out ${
+                i === active ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+              loading={i === 0 ? "eager" : "lazy"}
+              {...(i === 0 ? { fetchPriority: "high" } : {})}
+            />
+          ))}
+        </div>
+
+        {/* Slide indicators */}
+        <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setActive(i);
+                setPaused(true);
+              }}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === active ? "w-6 bg-accent" : "w-1.5 bg-foreground/30 hover:bg-foreground/50"
+              }`}
+              aria-label={`Show slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Proof cards */}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-control border border-hero-foreground/20 bg-surface p-4 shadow-elegant">
+          <span className="flex items-center gap-2 text-[11px] font-semibold uppercase   text-muted-foreground">
+            <TrendingUp className="size-3.5 text-whatsapp" /> Response time
+          </span>
+          <p className="mt-1 font-display text-2xl font-bold text-foreground">-64%</p>
+          <p className="text-[11px] text-muted-foreground">after AI routing and canned replies</p>
+        </div>
+        <div className="rounded-control border border-hero-foreground/20 bg-surface p-4 shadow-elegant">
+          <span className="flex items-center gap-2 text-[11px] font-semibold uppercase   text-muted-foreground">
+            <Inbox className="size-3.5 text-primary" /> Shared inbox
+          </span>
+          <div className="mt-2 space-y-1.5">
+            {["Sales · 12 open", "Support · 4 open", "Billing · 0 open"].map((r) => (
+              <p key={r} className="flex items-center justify-between text-[11px] text-foreground">
+                {r}
+                <span className="size-1.5 rounded-full bg-whatsapp" />
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================ */
+/* Channel strip                                                */
+/* ============================================================ */
+function ChannelStrip() {
+  const channels = [
+    "WhatsApp Cloud API",
+    "WhatsApp QR",
+    "Instagram DM",
+    "Messenger",
+    "Telegram",
+    "Live Chat",
+    "SMS",
+    "Email",
+    "Web Widget",
+  ];
+  return (
+    <section className="border-y border-border bg-surface section-marketing-strip">
+      <div className="container-marketing">
+        <p className="text-center text-xs uppercase   text-muted-foreground">
+          One timeline for every conversation your customers start
+        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+          {channels.map((c) => (
+            <span
+              key={c}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground"
+            >
+              <span className="size-1.5 rounded-full bg-whatsapp" /> {c}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Stack replacement — before / after                           */
+/* ============================================================ */
+function StackReplacement() {
+  const before = [
+    "Helpdesk subscription per agent",
+    "Separate CRM nobody updates",
+    "A broadcast tool with its own contact list",
+    "Chatbot builder that can't see order history",
+    "Spreadsheets to reconcile all of it",
+  ];
+  const after = [
+    "One inbox, unlimited agents",
+    "CRM that writes itself from conversations",
+    "Campaigns built on live segments",
+    "Chatbots with catalog + CRM context",
+    "Analytics across every channel",
+  ];
+  return (
+    <section className="section-marketing">
+      <div className="container-marketing">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">
+            Why <Brand />
+          </span>
+          <h2 className="text-marketing-title mt-2">Retire the four-tool WhatsApp stack.</h2>
+          <p className="text-marketing-lede mt-4">
+            Most teams bolt a chatbot onto a helpdesk, export contacts into a CRM, then pay a fourth vendor to send
+            campaigns. <Brand /> collapses that into one platform with one database.
+          </p>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          <div className="surface-marketing-card overflow-hidden p-0">
+            <div className="aspect-[4/3] overflow-hidden bg-muted">
+              <img
+                src={whyBeforeImg}
+                alt="Fragmented tool stack: disconnected chatbot, helpdesk, CRM and campaign tools"
+                width={1024}
+                height={768}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="p-6">
+              <span className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold uppercase   text-muted-foreground">
+                <X className="size-3" /> Today
+              </span>
+              <ul className="mt-5 space-y-3">
+                {before.map((b) => (
+                  <li key={b} className="flex items-start gap-3 text-marketing-card-body">
+                    <X className="mt-0.5 size-4 shrink-0 text-muted-foreground" /> {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="surface-marketing-card-featured overflow-hidden p-0">
+            <div className="aspect-[4/3] overflow-hidden bg-muted">
+              <img
+                src={whyAfterImg}
+                alt="Unified workspace with WhatsApp inbox, CRM, chatbot and analytics in one platform"
+                width={1024}
+                height={768}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="p-6">
+              <span className="inline-flex items-center gap-2 rounded-full bg-whatsapp-muted px-3 py-1.5 text-xs font-semibold uppercase   text-foreground">
+                <Check className="size-3" /> With <Brand />
+              </span>
+              <ul className="mt-5 space-y-3">
+                {after.map((a) => (
+                  <li key={a} className="flex items-start gap-3 text-marketing-card-body text-foreground">
+                    <Check className="mt-0.5 size-4 shrink-0 text-whatsapp" /> {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Features — bento grid                                        */
+/* ============================================================ */
+function Features() {
+  const small = [
+    {
+      icon: Zap,
+      title: "Automations",
+      image: featureAutomationsImg,
+      imageAlt: "Isometric automation workflow with trigger and action nodes",
+      desc: "Trigger-based workflows: welcome messages, tagging, escalation, off-hours auto-reply.",
+    },
+    {
+      icon: Megaphone,
+      title: "Broadcast campaigns",
+      image: featureBroadcastImg,
+      imageAlt: "Isometric broadcast campaign with megaphone and delivery report",
+      desc: "Approved templates, segmented lists, throttling and per-message delivery reporting.",
+    },
+    {
+      icon: BarChart3,
+      title: "Analytics",
+      image: featureAnalyticsImg,
+      imageAlt: "Isometric analytics dashboard with charts and KPI tiles",
+      desc: "Delivery, read, response and CSAT metrics with team-level performance breakdowns.",
+    },
+    {
+      icon: Ticket,
+      title: "Helpdesk & SLA",
+      image: featureHelpdeskImg,
+      imageAlt: "Isometric helpdesk board with ticket cards and SLA stopwatch",
+      desc: "Tickets, priorities, business hours and breach alerts on top of the same threads.",
+    },
+    {
+      icon: Store,
+      title: "WhatsApp commerce",
+      image: featureCommerceImg,
+      imageAlt: "Isometric smartphone showing product catalog and shopping cart in chat",
+      desc: "Catalog, carts and order updates delivered straight inside the conversation.",
+    },
+    {
+      icon: CalendarClock,
+      title: "Appointments",
+      image: featureAppointmentsImg,
+      imageAlt: "Isometric booking calendar with time slots and reminder clock",
+      desc: "Bookable pages, reminders and calendar sync — confirmations sent on WhatsApp.",
+    },
+  ];
+  return (
+    <section id="features" className="section-marketing bg-surface">
+      <div className="container-marketing">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Platform</span>
+          <h2 className="text-marketing-title mt-2">Everything you need to run WhatsApp at scale.</h2>
+          <p className="text-marketing-lede mt-4">
+            Forty-plus modules share one contact graph, so a chatbot, a campaign and a sales rep all see the same
+            customer.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 lg:grid-cols-3">
+          {/* Hero tile */}
+          <div className="surface-marketing-card p-6 lg:col-span-2 bg-gradient-hero text-hero-foreground">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+              <div className="min-w-0">
+                <div className="chip-marketing-hero text-marketing-hero-eyebrow">
+                  <Inbox className="size-3" /> Shared inbox
+                </div>
+                <h3 className="text-marketing-oninverse-title mt-4">Every conversation, every channel, one queue.</h3>
+                <p className="text-marketing-oninverse-lede mt-3 max-w-lg">
+                  Assign, tag, snooze, merge duplicates and hand off between bot and human without losing a single
+                  message. Realtime, with delivery and read receipts.
+                </p>
+              </div>
+              <MessagesSquare className="hidden size-10 shrink-0 opacity-70 sm:block" />
+            </div>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {["Assignment rules", "Snooze & SLA", "Private notes", "Canned replies", "Bot handoff"].map((p) => (
+                <span key={p} className="rounded-full border border-hero-foreground/25 px-3 py-1.5 text-xs">
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* AI tile */}
+          <div className="surface-marketing-card p-6">
+            <div className="chip-marketing-icon">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <h3 className="text-marketing-card-title mt-4">AI Studio</h3>
+            <p className="text-marketing-card-body mt-1">
+              Reply suggestions, thread summaries, sentiment, translation and campaign copy — across Gemini, OpenAI,
+              Anthropic and Groq.
+            </p>
+            <div className="mt-5 space-y-2">
+              {["Summarise this thread", "Draft a reply", "Detect intent"].map((a) => (
+                <p
+                  key={a}
+                  className="flex items-center gap-2 rounded-control border border-border bg-background px-3 py-2 text-xs text-muted-foreground"
+                >
+                  <Bot className="size-3.5 text-accent" /> {a}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          {small.map((f) => (
+            <div key={f.title} className="surface-marketing-card-interactive overflow-hidden">
+              <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img
+                  src={f.image}
+                  alt={f.imageAlt}
+                  loading="lazy"
+                  width={768}
+                  height={576}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <div className="chip-marketing-icon">
+                  <f.icon className="w-4 h-4" />
+                </div>
+                <h3 className="text-marketing-card-title mt-4">{f.title}</h3>
+                <p className="text-marketing-card-body mt-1">{f.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Team use cases                                               */
+/* ============================================================ */
+function TeamUseCases() {
+  const teams = [
+    {
+      icon: TrendingUp,
+      name: "Sales",
+      image: teamSalesImg,
+      imageAlt: "Isometric sales pipeline dashboard with deal stages and forecast chart",
+      line: "Turn chats into a pipeline.",
+      points: [
+        "Deals, stages and forecasts fed by conversations",
+        "Lead capture from click-to-WhatsApp ads",
+        "Follow-up sequences that stop when a reply lands",
+        "Quotes, invoices and payment links in-thread",
+      ],
+    },
+    {
+      icon: LifeBuoy,
+      name: "Support",
+      image: teamSupportImg,
+      imageAlt: "Isometric support helpdesk with ticket cards and SLA timer",
+      line: "Resolve faster, with context.",
+      points: [
+        "Tickets, priorities and SLA timers",
+        "Skill-based routing and operator handoff",
+        "Knowledge-base answers grounded in your docs",
+        "CSAT collected right after resolution",
+      ],
+    },
+    {
+      icon: Megaphone,
+      name: "Marketing",
+      image: teamMarketingImg,
+      imageAlt: "Isometric marketing console with megaphone, journey flow and analytics",
+      line: "Campaigns people actually read.",
+      points: [
+        "Segments built from CRM fields and behaviour",
+        "Template management with Meta approval status",
+        "Drip journeys in the visual flow builder",
+        "Per-campaign delivery, read and reply analytics",
+      ],
+    },
+  ];
+  return (
+    <section id="use-cases" className="section-marketing bg-gradient-subtle">
+      <div className="container-marketing">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Built for every team</span>
+          <h2 className="text-marketing-title mt-2">One platform, three jobs to be done.</h2>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {teams.map((t) => (
+            <div key={t.name} className="surface-marketing-card-interactive flex flex-col overflow-hidden">
+              <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img
+                  src={t.image}
+                  alt={t.imageAlt}
+                  loading="lazy"
+                  width={768}
+                  height={576}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-6">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="chip-marketing-icon">
+                    <t.icon className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-marketing-card-title truncate">{t.name}</h3>
+                </div>
+                <p className="mt-4 font-display text-lg font-semibold text-foreground">{t.line}</p>
+                <ul className="mt-4 space-y-2.5">
+                  {t.points.map((p) => (
+                    <li key={p} className="flex items-start gap-2 text-marketing-card-body">
+                      <Check className="mt-0.5 size-4 shrink-0 text-whatsapp" /> {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Product tour — alternating rows                              */
+/* ============================================================ */
+function ProductTour() {
+  return (
+    <section id="tour" className="section-marketing">
+      <div className="container-marketing space-y-20 lg:space-y-28">
+        <TourRow
+          eyebrow="Inbox"
+          title="A conversation UI your agents will love."
+          body="Realtime updates, assignment routing, AI summaries and inline reply suggestions. Everything a support or sales team needs — nothing they don't."
+          points={[
+            "Realtime sync across every open tab",
+            "Optimistic sends with delivery & read receipts",
+            "AI summary and suggested reply per thread",
+            "Full keyboard shortcuts and bulk actions",
+          ]}
+          image={tourInboxImg}
+          imageAlt="unified team inbox with AI summaries and delivery receipts"
+        />
+
+        <TourRow
+          reverse
+          eyebrow="Automation"
+          title="Design chatbots and journeys on a canvas."
+          body="Drag triggers, conditions, delays and AI steps into a flow. Multi-language detection, business-hour branches and a clean handoff to a human when the bot is out of depth."
+          points={[
+            "Visual builder with versioning and test runs",
+            "Keyword, intent and event triggers",
+            "AI steps grounded in your knowledge base",
+            "Escalation to a queue, team or specific agent",
+          ]}
+          image={tourAutomationImg}
+          imageAlt="visual automation flow builder canvas with trigger, condition and AI steps"
+        />
+
+        <TourRow
+          eyebrow="Growth"
+          title="Broadcasts, catalog and commerce in one thread."
+          body="Send approved templates to live segments, share your catalog, and take the order without ever leaving WhatsApp. Payment links and order updates go out automatically."
+          points={[
+            "Template library with Meta approval state",
+            "Throttled sending with per-message reporting",
+            "Product catalog, carts and abandoned-cart nudges",
+            "Stripe and Paddle checkout links in-conversation",
+          ]}
+          image={tourGrowthImg}
+          imageAlt="WhatsApp commerce catalog, cart and broadcast campaign console"
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Stepper — auto-rotating feature tabs with image + list + CTA */
+/* ============================================================ */
+const STEP_SLUGS = [
+  "step-smart-inbox",
+  "step-flow-builder",
+  "step-campaigns-webhooks",
+  "step-automation-chatbots",
+  "step-ecommerce-shopify",
+] as const;
+
+function Stepper() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const steps = [
+    {
+      n: "01",
+      title: "Smart Inbox",
+      desc: "One live queue for every channel — WhatsApp, Instagram, Messenger, Telegram, SMS, Email and Live Chat. Assign, tag, and resolve conversations together.",
+      list: [
+        "Unified inbox with real-time presence",
+        "Auto-assignment, mentions, and SLA timers",
+        "Internal notes and collision detection",
+        "Mobile notifications for urgent threads",
+      ],
+      cta: "Explore the inbox",
+      href: "#features",
+      image: stepperInboxImg,
+      alt: "Smart Inbox shared team queue",
+    },
+    {
+      n: "02",
+      title: "Flow Builder",
+      desc: "Drag triggers, conditions, delays and AI steps into a visual journey with versioning, test runs, and one-click publishing.",
+      list: [
+        "No-code canvas with 30+ node types",
+        "Branching logic, A/B splits and loops",
+        "Version history and rollback",
+        "Trigger from webhooks, schedules or events",
+      ],
+      cta: "See flow builder",
+      href: "#tour",
+      image: stepperFlowImg,
+      alt: "visual flow builder canvas",
+    },
+    {
+      n: "03",
+      title: "Campaigns & Webhooks",
+      desc: "Broadcast approved templates to live segments, then push events to any external system or BI tool.",
+      list: [
+        "Segment by tags, behavior, or CRM status",
+        "WhatsApp template approval pipeline",
+        "Real-time analytics and read receipts",
+        "Webhooks to Zapier, Make, custom APIs",
+      ],
+      cta: "View campaigns",
+      href: "#pricing",
+      image: stepperCampaignImg,
+      alt: "campaign analytics dashboard",
+    },
+    {
+      n: "04",
+      title: "Automation Flows & Chatbots",
+      desc: "Deploy AI agents grounded in your knowledge base that hand off cleanly to a human when confidence is low.",
+      list: [
+        "Knowledge base with RAG and citations",
+        "Multi-language intent detection",
+        "Skills-based routing and human handoff",
+        "Live train from closed conversations",
+      ],
+      cta: "Meet the AI",
+      href: "#tour",
+      image: stepperBotImg,
+      alt: "AI chatbot builder",
+    },
+    {
+      n: "05",
+      title: "Ecommerce & Shopify Integration",
+      desc: "Connect your Shopify store and turn WhatsApp into a checkout channel. Sync products, carts, orders and abandoned-cart recovery.",
+      list: [
+        "Native Shopify store sync and catalog import",
+        "WhatsApp product cards and mini-cart checkout",
+        "Abandoned-cart and order-status automations",
+        "Unified customer profile across store and chat",
+      ],
+      cta: "Explore commerce",
+      href: "#features",
+      image: stepperEcommerceImg,
+      alt: "ecommerce and Shopify WhatsApp integration",
+    },
+  ];
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % steps.length), 5000);
+    return () => clearInterval(id);
+  }, [paused, steps.length]);
+
+  // Deep links: #step-flow-builder etc. selects the tab and scrolls it into view.
+  useEffect(() => {
+    const applyHash = (scroll: boolean) => {
+      const slug = window.location.hash.replace(/^#/, "");
+      const idx = STEP_SLUGS.indexOf(slug as (typeof STEP_SLUGS)[number]);
+      if (idx < 0) return;
+      setActive(idx);
+      setPaused(true);
+      if (scroll) {
+        requestAnimationFrame(() => {
+          sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    };
+    applyHash(true);
+    const onHashChange = () => applyHash(true);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const selectStep = (i: number) => {
+    setActive(i);
+    setPaused(true);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", `#${STEP_SLUGS[i]}`);
+    }
+  };
+
+  return (
+    <section ref={sectionRef} id="workflow" className="section-marketing bg-gradient-subtle scroll-mt-24">
+      <div className="container-marketing">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">The workflow</span>
+          <h2 className="text-marketing-title mt-2">From first message to fully automated revenue.</h2>
+        </div>
+
+        <div
+          className="mt-12 rounded-control border border-border bg-surface shadow-elegant overflow-hidden"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
+          {/* Tab list */}
+          <div
+            className="flex gap-1 overflow-x-auto border-b border-border bg-background p-2 sm:gap-2 sm:p-3"
+            role="tablist"
+          >
+            {steps.map((s, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={s.n}
+                  id={STEP_SLUGS[i]}
+                  onClick={() => selectStep(i)}
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`group flex shrink-0 items-center gap-2 rounded-control px-3 py-2.5 text-left transition-all duration-200 sm:px-4 sm:py-3 ${
+                    isActive
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent/10 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span
+                    className={`font-display text-lg font-bold leading-none  ${isActive ? "text-accent-foreground" : "text-accent/80 group-hover:text-accent"}`}
+                  >
+                    {s.n}
+                  </span>
+                  <span
+                    className={`font-display text-sm font-semibold ${isActive ? "text-accent-foreground" : "text-foreground"}`}
+                  >
+                    {s.title}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Content panels */}
+          <div className="relative">
+            {steps.map((s, i) => (
+              <div
+                key={s.n}
+                className={`transition-opacity duration-500 ease-out ${i === active ? "relative opacity-100 z-10" : "absolute inset-0 opacity-0 z-0 pointer-events-none"}`}
+                aria-hidden={i !== active}
+              >
+                <div className="grid gap-8 p-6 lg:grid-cols-2 lg:gap-12 lg:p-10">
+                  {/* Text */}
+                  <div className="flex flex-col justify-center">
+                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">{s.n}</span>
+                    <h3 className="text-marketing-title mt-2">{s.title}</h3>
+                    <p className="text-marketing-lede mt-3">{s.desc}</p>
+                    <ul className="mt-6 space-y-3">
+                      {s.list.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-marketing-meta">
+                          <Check className="mt-0.5 size-4 shrink-0 text-whatsapp" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-8">
+                      <Button asChild variant="primary" size="lg">
+                        <a href={s.href} {...ctaAttrs("stepper_cta", "workflow", "cta_click", s.title)}>
+                          {s.cta} <ArrowRight className="ml-2 size-4" />
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Image */}
+                  <div className="relative overflow-hidden rounded-control border border-border bg-background shadow-sm">
+                    <img
+                      src={s.image}
+                      alt={s.alt}
+                      width={1024}
+                      height={768}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Progress bar */}
+          <div className="h-1 bg-muted">
+            <div
+              className="h-full bg-accent transition-all duration-300"
+              style={{ width: `${((active + 1) / steps.length) * 100}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TourRow({
+  eyebrow,
+  title,
+  body,
+  points,
+  visual,
+  image,
+  imageAlt,
+  reverse,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  points: string[];
+  visual?: ReactNode;
+  image?: string;
+  imageAlt?: string;
+  reverse?: boolean;
+}) {
+  return (
+    <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className={`min-w-0 ${reverse ? "lg:order-2" : ""}`}>
+        <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">{eyebrow}</span>
+        <h3 className="text-marketing-title mt-2">{title}</h3>
+        <p className="text-marketing-lede mt-4">{body}</p>
+        <ul className="mt-6 space-y-3">
+          {points.map((p) => (
+            <li key={p} className="flex items-start gap-2 text-marketing-meta">
+              <Check className="mt-0.5 size-4 shrink-0 text-whatsapp" /> {p}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={`min-w-0 space-y-6 ${reverse ? "lg:order-1" : ""}`}>
+        {image ? (
+          <div className="surface-marketing-card aspect-[4/3] overflow-hidden">
+            <img
+              src={image}
+              alt={imageAlt ?? title}
+              loading="lazy"
+              width={1200}
+              height={912}
+              className="size-full object-cover"
+            />
+          </div>
+        ) : null}
+        {visual}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================ */
+/* Stats                                                        */
+/* ============================================================ */
+function Stats() {
+  const stats = [
+    { k: "16", v: "Messaging channels" },
+    { k: "40+", v: "Built-in modules" },
+    { k: "250+", v: "Database tables" },
+    { k: "99.9%", v: "Uptime target" },
+  ];
+  return (
+    <section className="relative overflow-hidden bg-foreground text-background">
+      <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_1px_1px,currentColor_1px,transparent_0)] [background-size:24px_24px]" />
+      <div className="relative container-marketing py-16 lg:py-20">
+        <div className="grid grid-cols-2 gap-8 text-center lg:grid-cols-4 lg:gap-4">
+          {stats.map((s) => (
+            <div key={s.v}>
+              <div className="font-display text-4xl font-bold tracking-tight lg:text-5xl">{s.k}</div>
+              <div className="mt-2 text-xs uppercase   opacity-70">{s.v}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* How it works                                                 */
+/* ============================================================ */
+function HowItWorks() {
+  const steps = [
+    {
+      n: "01",
+      t: "Install in minutes",
+      d: "Run the guided Setup Wizard. Point it at Postgres, create your Super Admin, and you're live.",
+    },
+    {
+      n: "02",
+      t: "Connect WhatsApp",
+      d: "Walk the connection wizard for the official Cloud API — or scan a QR for a personal number.",
+    },
+    {
+      n: "03",
+      t: "Bring in your data",
+      d: "Import contacts by CSV, sync your catalog, and let the identity engine merge duplicates.",
+    },
+    {
+      n: "04",
+      t: "Automate & scale",
+      d: "Design chatbots, workflows and campaigns visually. AI handles the repetitive replies.",
+    },
+  ];
+  return (
+    <section className="section-marketing bg-surface">
+      <div className="container-marketing">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">How it works</span>
+          <h2 className="text-marketing-title mt-2">From zero to shipping in one afternoon.</h2>
+        </div>
+        <div className="mt-14 grid gap-10 lg:grid-cols-2">
+          {steps.map((s) => (
+            <div key={s.n} className="flex gap-6">
+              <div className="shrink-0 font-display text-5xl font-bold leading-none  text-primary/80">
+                {s.n}
+              </div>
+              <div className="min-w-0 border-l-2 border-border pl-6">
+                <h3 className="text-marketing-card-title">{s.t}</h3>
+                <p className="text-marketing-card-body mt-2">{s.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Roles — bento                                                */
+/* ============================================================ */
+function Roles() {
+  return (
+    <section className="section-marketing">
+      <div className="container-marketing">
+        <div className="mx-auto max-w-xl text-center">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Multi-role</span>
+          <h2 className="text-marketing-title mt-2">One platform. Seven purpose-built experiences.</h2>
+          <p className="text-marketing-lede mt-4">
+            Every role gets a tailored surface — from Super Admin control planes to a clean Client Portal.
+          </p>
+        </div>
+        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="surface-marketing-card md:col-span-2 lg:row-span-2 bg-gradient-hero text-hero-foreground overflow-hidden">
+            <div className="aspect-[16/9] overflow-hidden">
+              <img
+                src={roleSuperAdminImg}
+                alt="Platform control plane with tenant panels and audit cards"
+                loading="lazy"
+                width={1024}
+                height={576}
+                className="size-full object-cover"
+              />
+            </div>
+            <div className="p-6">
+              <ShieldCheck className="size-8" />
+              <h3 className="text-marketing-card-title mt-6 text-hero-foreground">Super Admin</h3>
+              <p className="text-marketing-oninverse-lede mt-2">
+                Tenant management, quotas, feature flags, audit logs, platform-wide announcements and white-label
+                config.
+              </p>
+            </div>
+          </div>
+          {[
+            {
+              icon: Users,
+              img: roleAdminImg,
+              alt: "Workspace settings with member avatars, billing card and integrations",
+              t: "Admin",
+              d: "Workspace, billing, members, integrations.",
+            },
+            {
+              icon: BarChart3,
+              img: roleManagerImg,
+              alt: "Pipeline board with deal cards and a growth chart",
+              t: "Manager",
+              d: "Pipelines, campaigns, workflows, teams.",
+            },
+            {
+              icon: MessagesSquare,
+              img: roleAgentImg,
+              alt: "Shared inbox with conversation avatars and chat bubbles",
+              t: "Agent",
+              d: "Inbox, tickets, contacts, deals in scope.",
+            },
+            {
+              icon: Headphones,
+              img: roleProviderImg,
+              alt: "Booking calendar with a service checklist and headset",
+              t: "Provider",
+              d: "Bookings, service delivery, client tasks.",
+            },
+          ].map((r) => (
+            <div key={r.t} className="surface-marketing-card overflow-hidden">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img
+                  src={r.img}
+                  alt={r.alt}
+                  loading="lazy"
+                  width={768}
+                  height={576}
+                  className="size-full object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <r.icon className="size-6 text-primary" />
+                <h3 className="text-marketing-card-title mt-4">{r.t}</h3>
+                <p className="text-marketing-card-body mt-1">{r.d}</p>
+              </div>
+            </div>
+          ))}
+          <div className="surface-marketing-card md:col-span-2 overflow-hidden">
+            <div className="aspect-[16/9] overflow-hidden">
+              <img
+                src={rolePortalImg}
+                alt="Client portal on a laptop with invoices, quotes and files"
+                loading="lazy"
+                width={1024}
+                height={576}
+                className="size-full object-cover"
+              />
+            </div>
+            <div className="p-6">
+              <Globe2 className="size-6 text-primary" />
+              <h3 className="text-marketing-card-title mt-4">Client Portal</h3>
+              <p className="text-marketing-card-body mt-1">
+                Conversations, invoices, quotes and files — branded to your tenant.
+              </p>
+            </div>
+          </div>
+          <div className="surface-marketing-card md:col-span-1 lg:col-span-2 overflow-hidden">
+            <div className="aspect-[16/9] overflow-hidden">
+              <img
+                src={roleDeveloperImg}
+                alt="Developer workspace with API keys, webhooks and integration code"
+                loading="lazy"
+                width={1024}
+                height={576}
+                className="size-full object-cover"
+              />
+            </div>
+            <div className="p-6">
+              <Plug className="size-6 text-primary" />
+              <h3 className="text-marketing-card-title mt-4">Developer</h3>
+              <p className="text-marketing-card-body mt-1">
+                API keys, webhooks, event streams and custom integrations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Integrations                                                 */
+/* ============================================================ */
+function Integrations() {
+  const groups = [
+    {
+      icon: MessagesSquare,
+      title: "Channels",
+      image: integrationsChannelsImg,
+      alt: "Unified inbox connecting WhatsApp, Instagram, Messenger, Telegram, SMS, email and live chat",
+      items: ["WhatsApp Cloud API", "Instagram DM", "Messenger", "Telegram", "SMS", "Email", "Live Chat"],
+    },
+    {
+      icon: Bot,
+      title: "AI providers",
+      image: integrationsAiImg,
+      alt: "AI provider routing across Gemini, OpenAI, Anthropic, Groq and Lovable AI",
+      items: ["Gemini", "OpenAI", "Anthropic", "Groq", "Lovable AI"],
+    },
+    {
+      icon: Workflow,
+      title: "Business",
+      image: integrationsBusinessImg,
+      alt: "Business integrations with Paddle, Stripe, Google Calendar, Zapier, Webhooks, Zoom and Meet",
+      items: ["Paddle", "Stripe", "Google Calendar", "Zapier", "Webhooks", "Zoom", "Meet"],
+    },
+  ];
+  return (
+    <section className="section-marketing bg-gradient-subtle">
+      <div className="container-marketing">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Integrations</span>
+            <h2 className="text-marketing-title mt-2">Plug into everything your business already runs on.</h2>
+          </div>
+          <Button asChild variant="outline" size="cta">
+            <a href={docsUrl()} target="_blank" rel="noreferrer" {...ctaAttrs("browse-the-api", "integrations")}>
+              <Blocks className="size-4" /> Browse the API
+            </a>
+          </Button>
+        </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {groups.map((g) => (
+            <div key={g.title} className="surface-marketing-card overflow-hidden p-6">
+              <div className="relative -mx-6 -mt-6 mb-5 aspect-[4/3] w-[calc(100%+3rem)] overflow-hidden">
+                <img
+                  src={g.image}
+                  alt={g.alt}
+                  loading="lazy"
+                  width={1024}
+                  height={768}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="chip-marketing-icon shrink-0">
+                  <g.icon className="w-4 h-4" />
+                </div>
+                <h3 className="text-marketing-card-title truncate">{g.title}</h3>
+              </div>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {g.items.map((i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground"
+                  >
+                    <Plug className="size-3 text-muted-foreground" /> {i}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Security                                                     */
+/* ============================================================ */
+function Security() {
+  const items = [
+    {
+      icon: Lock,
+      img: securityRlsImg,
+      alt: "Database protected by a shield with per-row locks",
+      t: "Row-level security",
+      d: "Every user-scoped table enforced with auth.uid() policies.",
+    },
+    {
+      icon: KeyRound,
+      img: security2faImg,
+      alt: "Phone with fingerprint and key authentication",
+      t: "2FA & sessions",
+      d: "TOTP, trusted devices, session revocation and login history.",
+    },
+    {
+      icon: Database,
+      img: securityGdprImg,
+      alt: "Privacy consent document with export and erase controls",
+      t: "GDPR-ready",
+      d: "Consent records, data export, retention policies, erasure.",
+    },
+    {
+      icon: ShieldCheck,
+      img: securityWebhooksImg,
+      alt: "Sealed webhook payload delivered to a server",
+      t: "Signed webhooks",
+      d: "HMAC-SHA256 with rotating secrets and delivery logs.",
+    },
+    {
+      icon: Server,
+      img: securityInfraImg,
+      alt: "Server rack inside a glass cube with container blocks",
+      t: "Your infrastructure",
+      d: "Docker, a VPS, or your own cloud — the data never leaves it.",
+    },
+    {
+      icon: Layers,
+      img: securityTenantImg,
+      alt: "Three isolated glass cubes each holding separate data stacks",
+      t: "Tenant isolation",
+      d: "Workspace-scoped storage paths and role-scoped policies.",
+    },
+  ];
+  return (
+    <section className="section-marketing">
+      <div className="container-marketing grid items-center gap-12 lg:grid-cols-5 items-start">
+        <div className="lg:col-span-2">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Security</span>
+          <h2 className="text-marketing-title mt-2">Enterprise controls baked into the schema, not bolted on.</h2>
+          <p className="text-marketing-lede mt-4">
+            Roles live in a dedicated table and are evaluated by a SECURITY DEFINER function — no recursive RLS, no
+            privilege escalation.
+          </p>
+          <Button asChild variant="outline" size="cta" className="mt-6">
+            <a href={docsUrl()} target="_blank" rel="noreferrer" {...ctaAttrs("security-guide", "security")}>
+              Read the security guide <ArrowRight />
+            </a>
+          </Button>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:col-span-3">
+          {items.map((i) => (
+            <div key={i.t} className="surface-marketing-card overflow-hidden">
+              <div className="aspect-[4/3] overflow-hidden bg-muted">
+                <img
+                  src={i.img}
+                  alt={i.alt}
+                  loading="lazy"
+                  width={768}
+                  height={576}
+                  className="size-full object-cover"
+                />
+              </div>
+              <div className="p-5">
+                <i.icon className="size-5 text-primary" />
+                <h3 className="mt-3 font-display font-semibold text-foreground">{i.t}</h3>
+                <p className="text-marketing-card-body mt-1">{i.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Testimonials                                                 */
+/* ============================================================ */
+function Testimonials() {
+  const quotes = [
+    {
+      q: `We replaced three tools with ${BRAND_NAME} in a weekend. The AI reply assistant alone paid for the year.`,
+      n: "Marta O.",
+      r: "COO, Fjord Labs",
+    },
+    {
+      q: `Multi-tenant, self-hosted, and actually documented. My developers stopped fighting ${BRAND_NAME}.`,
+      n: "Rahul K.",
+      r: "CTO, Meridian Group",
+    },
+    {
+      q: "The Client Portal is the reason we won our last two enterprise deals. It looks like our product.",
+      n: "Ana S.",
+      r: "Founder, Cascade",
+    },
+  ];
+  return (
+    <section className="section-marketing bg-surface">
+      <div className="container-marketing">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Customers</span>
+          <h2 className="text-marketing-title mt-2">Trusted by teams that live on WhatsApp.</h2>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {quotes.map((q) => (
+            <figure key={q.n} className="surface-marketing-card flex flex-col p-6">
+              <Quote className="size-6 text-primary/70" />
+              <blockquote className="text-marketing-card-body mt-4 text-base leading-relaxed text-foreground">
+                “{q.q}”
+              </blockquote>
+              <div className="mt-auto flex items-center gap-3 pt-6">
+                <div className="grid size-10 shrink-0 place-items-center rounded-full bg-gradient-accent text-sm font-bold text-accent-foreground">
+                  {q.n[0]}
+                </div>
+                <figcaption className="min-w-0">
+                  <div className="truncate font-display text-sm font-semibold text-foreground">{q.n}</div>
+                  <div className="truncate text-xs text-muted-foreground">{q.r}</div>
+                </figcaption>
+                <div className="ml-auto flex shrink-0 text-primary">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="size-3.5 fill-current" />
+                  ))}
+                </div>
+              </div>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Pricing                                                      */
+/* ============================================================ */
+function Pricing() {
+  const {
+    plans,
+    interval,
+    setInterval: setBillingInterval,
+    savingsPct,
+    hasYearly,
+    maxTrialDays,
+    isLoading,
+  } = usePublicPlans("month");
+  const { subscription } = useMyPlanSummary();
+
+  // Was a literal "All prices in USD", which contradicted the prices above it
+  // once the platform currency changed. Taken from the plans on display.
+  const platformCurrency = useTenantCurrency();
+  const displayCurrency = plans.find((p) => p.currency)?.currency?.toUpperCase() ?? platformCurrency;
+
+  return (
+    <section id="pricing" className="section-marketing">
+      <div className="container-marketing">
+        <div className="mx-auto max-w-xl text-center">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold uppercase text-primary">Pricing</span>
+          <h2 className="text-marketing-title mt-2">Simple pricing. No per-agent tax.</h2>
+          <p className="text-marketing-lede mt-4">
+            Every plan includes the full platform — inbox, automations, templates and CRM. You only choose how much
+            volume and how many seats you need.
+            {maxTrialDays > 0 && ` Paid plans start with a ${maxTrialDays}-day free trial.`}
+          </p>
+
+          {hasYearly && (
+            <div
+              role="group"
+              aria-label="Billing interval"
+              className="mt-6 inline-flex items-center rounded-full border border-border bg-surface p-1 text-sm"
+            >
+              {(["month", "year"] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={interval === value}
+                  onClick={() => {
+                    setBillingInterval(value);
+                    trackMarketing("cta_click", { cta_id: "billing-interval", location: "home-pricing", label: value });
+                  }}
+                  className={`rounded-full px-4 py-1.5 transition ${
+                    interval === value
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {value === "month" ? "Monthly" : "Yearly"}
+                  {value === "year" && (
+                    <span className="ml-1 text-[11px] uppercase text-accent">Save {savingsPct}%</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <CurrentPlanBanner subscription={subscription} />
+        </div>
+
+        {isLoading ? (
+          <div className="mt-12 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="surface-marketing-card h-80 animate-pulse p-6" />
+            ))}
+          </div>
+        ) : plans.length === 0 ? (
+          <p className="text-marketing-meta mt-12 text-center">
+            Plans are being updated —{" "}
+            <Link to="/pricing" className="text-accent hover:underline">
+              see full pricing
+            </Link>
+            .
+          </p>
+        ) : (
+          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {plans.map((p) => {
+              const contactSales = isContactSalesPlan(p);
+              const perMonth = monthlyEquivalent(p);
+              const cta =
+                p.cta_label ??
+                (contactSales ? "Contact sales" : p.price_cents === 0 ? "Start free" : "Start free trial");
+              return (
+                <div
+                  key={p.id}
+                  className={`${p.highlight ? "surface-marketing-card-featured" : "surface-marketing-card"} flex flex-col p-6 ${isCurrentPlan(p.code, subscription) ? "ring-2 ring-accent/40" : ""}`}
+                >
+                  {p.badge && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-control bg-accent px-2 py-0.5 text-[11px] uppercase   text-accent-foreground">
+                      {p.badge}
+                    </span>
+                  )}
+                  {isCurrentPlan(p.code, subscription) && (
+                    <div className="mb-2">
+                      <CurrentPlanPill subscription={subscription} />
+                    </div>
+                  )}
+                  <h3 className="text-marketing-card-title">{p.name}</h3>
+                  <div className="mt-2 flex items-baseline gap-1">
+                    <span className="font-display text-4xl font-semibold text-foreground">
+                      {p.price_cents === 0 ? "Free" : formatPlanPrice(p.price_cents, p.currency)}
+                    </span>
+                    {p.price_cents > 0 && (
+                      <span className="text-marketing-meta">
+                        {p.interval === "lifetime" ? "one-time" : `/ ${p.interval === "year" ? "year" : "month"}`}
+                      </span>
+                    )}
+                  </div>
+                  {perMonth && <p className="text-marketing-meta mt-1">{perMonth} / month, billed yearly</p>}
+                  {(p.tagline || p.description) && (
+                    <p className="text-marketing-card-body mt-2">{p.tagline ?? p.description}</p>
+                  )}
+                  {p.trial_days > 0 && !contactSales && (
+                    <p className="mt-1 text-xs text-accent">{p.trial_days}-day free trial</p>
+                  )}
+                  <ul className="text-marketing-meta mt-5 space-y-2">
+                    {planBullets(p).map((f) => (
+                      <li key={f} className="flex items-start gap-2">
+                        <Check className="mt-0.5 size-4 shrink-0 text-whatsapp" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    asChild
+                    variant={p.highlight ? "accent" : "outline"}
+                    size="cta"
+                    className="mt-6 w-full self-end"
+                  >
+                    {contactSales ? (
+                      <a
+                        href="mailto:sales@wacrm.com?subject=Enterprise%20inquiry"
+                        {...ctaAttrs(`plan-${p.code}`, "home-pricing", "pricing_click", cta)}
+                        data-analytics-plan={p.code}
+                      >
+                        {cta}
+                      </a>
+                    ) : isCurrentPlan(p.code, subscription) ? (
+                      <Link to="/billing" data-analytics-plan={p.code}>
+                        Manage your plan
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/auth"
+                        search={{ plan: p.code } as never}
+                        {...ctaAttrs(`plan-${p.code}`, "home-pricing", "pricing_click", cta)}
+                        data-analytics-plan={p.code}
+                      >
+                        {cta}
+                      </Link>
+                    )}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <p className="text-marketing-meta mt-8 text-center">
+          All prices in {displayCurrency}. Cancel anytime.{" "}
+          <Link to="/pricing" className="text-accent hover:underline">
+            Compare every plan
+          </Link>
+          .
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* FAQ                                                          */
+/* ============================================================ */
+// The FAQ is a standalone, searchable component (see components/marketing/faq-section).
+
+/* ============================================================ */
+/* CTA                                                          */
+/* ============================================================ */
+function CTA() {
+  const proof = [
+    "A 20-minute walkthrough on your own use case",
+    "Migration help from your current inbox or CRM",
+    "Cloud API onboarding — numbers, templates, verification",
+    "Self-hosting review with your engineering team",
+  ];
+  return (
+    <section id="demo" className="section-marketing-sm">
+      <div className="container-marketing">
+        <div className="relative overflow-hidden rounded-control bg-gradient-hero p-8 shadow-elegant lg:p-14">
+          <div className="absolute -right-16 -bottom-16 size-72 rounded-full bg-whatsapp/25 blur-3xl" />
+          <div className="relative grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <div className="min-w-0">
+              <span className="chip-marketing-hero text-marketing-hero-eyebrow">
+                <Sparkles className="w-3 h-3" /> Book a demo
+              </span>
+              <h2 className="text-marketing-oninverse-title mt-5">Ship your WhatsApp CRM this week.</h2>
+              <p className="text-marketing-oninverse-lede mt-3 max-w-lg">
+                Tell us how your team works today and we'll show you the exact setup — inbox, automations and templates
+                — running on your numbers.
+              </p>
+              <ul className="text-marketing-hero-meta mt-6 space-y-3">
+                {proof.map((p) => (
+                  <li key={p} className="flex items-start gap-2">
+                    <Check className="mt-0.5 size-4 shrink-0 text-hero-accent" /> {p}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <WhatsAppCtaButton
+                  size="lg"
+                  label="Chat with us now"
+                  message="Hi! I'd like to book a {site} demo."
+                  analyticsLocation="demo-cta"
+                  className="text-white" 
+                />
+                <Button asChild variant="heroGhost" size="lg">
+                  <Link to="/auth" {...ctaAttrs("start-free", "demo-cta")}>
+                    Or start free instead <ArrowRight />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="min-w-0">
+              <LeadCaptureForm />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ */
+/* Footer                                                       */
+/* ============================================================ */
+function Footer() {
+  const columns = [
+    {
+      title: "Product",
+      links: [
+        { label: "Features", href: "#features" },
+        { label: "Product tour", href: "#tour" },
+        { label: "Solutions", href: "#use-cases" },
+        { label: "Pricing", href: "#pricing" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "Documentation", href: docsUrl() },
+        { label: "Install guide", href: "/install" },
+        { label: "About", href: "/about" },
+        { label: "Contact", href: "/contact" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy policy", href: "/legal/privacy-policy" },
+        { label: "Terms of service", href: "/legal/terms-of-service" },
+        { label: "Cookie policy", href: "/legal/cookie-policy" },
+        { label: "DPA", href: "/legal/dpa" },
+      ],
+    },
+  ];
+  return (
+    <footer className="border-t border-white/10 bg-black">
+      <div className="container-marketing py-14">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
+          <div className="min-w-0">
+            <div className="flex min-w-0 items-center gap-3">
+              <img src={landingLogo} alt="" className="size-8 shrink-0 object-contain" />
+              <span className="truncate font-display text-xl font-bold tracking-tight text-background">
+                <Brand />
+              </span>
+            </div>
+            <p className="mt-4 max-w-xs text-sm text-background/70">
+              The self-hosted WhatsApp CRM for sales, support and marketing teams.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3 text-sm text-background/70">
+              <a
+                href={docsUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="link-marketing-onhero inline-flex items-center gap-1"
+              >
+                <Github className="size-3.5" /> Docs
+              </a>
+              <a href="/install" className="link-marketing-onhero inline-flex items-center gap-1">
+                <Server className="size-3.5" /> Self-host
+              </a>
+            </div>
+          </div>
+          {columns.map((c) => (
+            <div key={c.title} className="min-w-0">
+              <p className="font-display text-sm font-semibold text-background">{c.title}</p>
+              <ul className="mt-4 space-y-2.5 text-sm text-background/70">
+                {c.links.map((l) => (
+                  <li key={l.label}>
+                    <a href={l.href} className="link-marketing-onhero">
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="mt-12 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-t border-white/10 pt-6 text-sm text-background/70">
+          <span className="truncate">
+            © {new Date().getFullYear()} <Brand />. All rights reserved.
+          </span>
+          <span className="shrink-0 text-xs">Not affiliated with WhatsApp or Meta Platforms, Inc.</span>
+        </div>
+      </div>
+    </footer>
+  );
+}

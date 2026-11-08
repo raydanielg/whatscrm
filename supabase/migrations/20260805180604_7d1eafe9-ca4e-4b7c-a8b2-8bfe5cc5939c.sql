@@ -1,0 +1,1 @@
+GRANT INSERT, UPDATE, DELETE ON public.payment_gateway_settings TO authenticated;

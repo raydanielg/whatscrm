@@ -1,0 +1,1 @@
+ALTER TABLE public.contact_list_members REPLICA IDENTITY FULL;

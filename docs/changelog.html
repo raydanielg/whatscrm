@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WACRM — Changelog v6.8.9</title>
+<meta name="description" content="Release history for WACRM — omnichannel inbox, WhatsApp templates, CRM, automation and security updates across every version." />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">W</span>
+    <div>
+      <div class="brand-name">WACRM Docs</div>
+      <div class="brand-ver">v6.8.9 · Changelog</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button id="themeBtn" class="ghost" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation pages">
+    <div class="nav-group">
+      <h4>Documentation</h4>
+      <ul>
+        <li><a href="./index.html">Documentation</a></li>
+        <li><a href="./changelog.html">Changelog</a></li>
+        <li><a href="./status.html">System Status</a></li>
+        <li><a href="./support.html">Support</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content" id="content">
+    <section id="changelog">
+      <h1>Changelog <span class="badge">v6.8.9</span></h1>
+      <p class="lead">Every notable change to WACRM, newest first.</p>
+      <p><a class="btn" href="/api/public/changelog.pdf" download>&#8681; Download v6.8.9 release notes (PDF)</a></p>
+
+      <h3>Version 6.8.9 <span class="badge success">Current</span></h3>
+      <p><em>October 26, 2026 · AI keys, social inbox, TikTok, YouTube and notifications.</em></p>
+      <ul>
+        <li>Bring your own OpenAI or Gemini API key, encrypted in Supabase Vault, with a cost-tiered model catalog, clear provider errors and automatic model fallback.</li>
+        <li>Facebook Page, YouTube, LinkedIn and TikTok comments arrive in the Inbox, and agents reply from the Inbox.</li>
+        <li>TikTok Business direct messages in the Inbox, an AI chatbot for TikTok DMs and a dedicated TikTok settings group.</li>
+        <li>YouTube connects with Google and stays connected through automatic token renewal.</li>
+        <li>Unified header notifications across every module, with category filters and working deep links.</li>
+        <li>Responsive inbox layout, conversation row actions, member names in ownership transfer and paginated activity timelines.</li>
+        <li>Fix re-adding a removed AI key, campaign template previews and webhook origins behind reverse proxies.</li>
+      </ul>
+      <p><strong>Upgrade:</strong> Apply all pending migrations through <code>20261026003000_byok_reuse_orphan_vault_secret.sql</code>. Set <code>TIKTOK_BUSINESS_APP_ID</code>/<code>TIKTOK_BUSINESS_APP_SECRET</code> and <code>YOUTUBE_CLIENT_ID</code>/<code>YOUTUBE_CLIENT_SECRET</code> for the new channels, and store the cron Vault secrets <code>wacrm_cron_base_url</code> and <code>wacrm_cron_token</code> so scheduled jobs reach the app. See <a href="/api/public/changelog.pdf">downloadable v6.8.9 release notes</a>.</p>
+
+      <h3>Version 6.6.8</h3>
+      <p><em>October 24, 2026 · Inbox, project work, dashboard, reminders and notifications.</em></p>
+      <ul>
+        <li>Improve inbox layout, chat list, composer previews, quoted replies and WhatsApp retry guidance.</li>
+        <li>Add channel-specific notification sounds, a volume control and task reminder settings for app and email.</li>
+        <li>Add project logos and colors, rich descriptions, task status indicators and permission-aware actions.</li>
+        <li>Correct dashboard lead, customer, pipeline and combined CRM/Project task states and counts.</li>
+        <li>Improve notification action menus and deep links to tasks and projects.</li>
+      </ul>
+      <p><strong>Upgrade:</strong> Apply pending migrations to the linked Supabase project, including <code>20261024223000_activity_notifications.sql</code>, before enabling database-backed activity alerts. See <a href="/api/public/changelog.pdf">downloadable v6.6.8 release notes</a> for release highlights; detailed verification status remains in the source release record.</p>
+
+      <h3>Version 6.5.7</h3>
+      <p><em>Released October 19, 2026 · Navigation, inbox, tenant reliability and deployment update.</em></p>
+      <p>This release improves global search, tenant and workspace switching, the inbox experience, compact navigation, workspace member identity, payment-link currency controls, integrations, and Cloudflare deployment.</p>
+      <ul>
+        <li>Add per-category Global Search pagination and fix message-result deep links.</li>
+        <li>Add Super Admin tenant creation and improve production organization/workspace switching.</li>
+        <li>Consolidate the Inbox header, improve composer spacing and keep newly opened conversations pinned to the latest message.</li>
+        <li>Respect user and platform 12/24-hour preferences for inbox message timestamps.</li>
+        <li>Load workspace member identities through a workspace-scoped directory function with secure fallbacks.</li>
+        <li>Add compact sidebar group flyouts and expose Google Sheets as a truthfully gated integration.</li>
+        <li>Replace the payment-link currency text field with an Admin-configured dropdown, filtered by the selected provider and enforced on the server.</li>
+        <li>Split Cloudflare deployment into a local build and a centralized prebuilt upload that binds exactly one requested domain.</li>
+      </ul>
+      <p><strong>Upgrade note:</strong> Apply <code>20261019150000_workspace_member_directory.sql</code> before validating the Team directory. Configure <code>CLOUDFLARE_WORKER_NAME</code>, <code>CLOUDFLARE_DOMAIN</code>, and <code>CLOUDFLARE_ZONE_NAME</code> in local ENV, build with <code>npm run build</code>, then upload the prebuilt artifact with <code>npm run deploy:cloudflare</code>.</p>
+
+      <h3>Version 6.4.5</h3>
+      <p><em>Released October 18, 2026 · Admin control-plane and platform governance update.</em></p>
+      <p>Super Admin settings and permissions get a pass: richer email templates, finer-grained feature toggles, a fixed invite-permission gap, and several admin UI reliability fixes.</p>
+      <ul>
+        <li>Unify every native checkbox across the app (~24 files, including sign-in's "Keep me signed in") onto the shared accessible <code>Checkbox</code> component.</li>
+        <li>Rebuild Email Templates (Super Admin &gt; Settings) with 7 pre-filled system patterns — welcome, verify email, reset password, team invitation, trial ending, payment failed, invoice — each with a relevant variable list insertable into Subject/Body by click or drag-and-drop.</li>
+        <li>Fix a permissions gap: accepting a workspace invitation never assigned a matching system role, so invited agents/viewers/admins got zero page permissions (an almost-empty sidebar). <code>accept_workspace_invitation()</code> now assigns the matching role automatically, with a backfill for already-invited members.</li>
+        <li>Extend Feature Toggles with six new platform modules (Project management, Ecommerce, Appointments &amp; booking, Helpdesk, Live chat, Chatbots) plus per-module sub-feature toggles, wired into the existing route-gating logic.</li>
+        <li>Fix AI Providers deletion: use a shadcn confirmation dialog, remove a successfully deleted provider from the list and counters immediately, then refresh the registry. Failed deletion keeps the provider visible. Cancel, success, failure and delayed-refresh UI tests pass.</li>
+        <li>Improve inbox media downloads, CRM and project task creation from conversations, rich-text editing, attachment scheduling, customer notes, and the grouped conversation actions menu.</li>
+        <li>Add Project Management screens, task and team workflows, Kanban task details, conversation links and project deadline reminders. See the <a href="./PROJECT_MANAGEMENT.md">deployment and access guide</a>; production multi-user verification remains open.</li>
+        <li>Add pagination to Developer Tools &gt; Webhook Events (10 per page) instead of one long scroll.</li>
+        <li>Add a search box to the Super Admin sidebar to filter admin pages by name.</li>
+      </ul>
+      <p><strong>Upgrade note:</strong> Apply migration <code>20261018150000_auto_assign_role_on_workspace_invite.sql</code> to fix existing invited-member permissions. Email Templates changes affect only the Super Admin editor and saved setting; outgoing transactional email (welcome/verify/reset/invite/billing) does not yet read from it.</p>
+
+      <h3>Unreleased <span class="badge">Updated October 18, 2026</span></h3>
+      <p>In progress: replace the active Lovable Cloud authentication, connector and AI gateway paths with WACRM-owned configuration and direct provider APIs. This work has passed local checks but has not been deployed or released. See the <a href="./UNRELEASED.md">running change record and rollout checklist</a>.</p>
+      <ul>
+        <li>Use Supabase Auth directly for sign-in; remove the Lovable auth broker, preview auth storage, error reporting, email event route and active App User Connector gateway client.</li>
+        <li>Connect Google Workspace and Google Booking Calendar through WACRM OAuth callbacks, encrypted server-side refresh tokens and direct Gmail, Drive, Calendar and Contacts APIs. Connect Microsoft 365 Booking Calendar through WACRM OAuth and Microsoft Graph.</li>
+        <li>Route AI requests to configured providers directly. Continue to read legacy <code>lovable</code> AI provider records through the Gemini adapter without deleting existing records.</li>
+        <li>Replace the Lovable Vite wrapper with direct Vite, React, Tailwind, TanStack Start and Nitro configuration in <code>vite.config.mts</code>. The default build target is now <code>node-server</code>; specify <code>NITRO_PRESET=cloudflare-module</code> for Cloudflare.</li>
+        <li>Remove obsolete Lovable SDK dependencies and active gateway setup copy; use local backup and Resend email defaults.</li>
+        <li>From three client videos: wait for Instagram carousel media readiness, add Facebook and TikTok post previews, prevent repeated sends of published social targets, and allow confirmed deletion of archived drip sequences.</li>
+        <li>Handle Resend inbound <code>email.received</code> events by retrieving the message and up to ten attachments, then importing them into the app inbox with retry-safe storage.</li>
+        <li>Add Vault-backed campaign-dispatch and drip-tick schedules in a pending migration. Applying it can send existing queued messages; review the queue and cron secrets before rollout.</li>
+        <li>Pause TikTok direct posting until explicit creator privacy, interaction, disclosure and consent choices plus posting-status verification are implemented. The previous public default was unsafe.</li>
+      </ul>
+      <p><strong>Rollout:</strong> Apply the pending OAuth/Calendar migrations, set server-only OAuth credentials and a stable encryption key, register callback URLs on the actual deployed host, then reconnect accounts that used Lovable connector keys. Review pending campaign messages before applying the new cron migration. No Lovable gateway key is needed. Live provider flows and deployment still need verification.</p>
+
+      <h3>Version 6.3.2</h3>
+      <p><em>Released October 14, 2026 · Customization and signed-in navigation update.</em></p>
+      <p>Workspace themes and white label controls now live in one grouped Customization page, with clearer saves and resets, stronger access controls, and improved dark mode contrast.</p>
+      <ul>
+        <li>Consolidate Themes and White Label under Settings &gt; Customization. Group brand colors, theme library, other colors, typography, layout and default mode under Visual design; group identity and logos, login page, email and domain under Brand touchpoints. The former Themes route redirects to Customization.</li>
+        <li>Simplify Brand colors to the workspace brand and accent colors. Give them a focused save action; Use theme colors clears only those two overrides without changing the selected theme or the user's light/dark preference.</li>
+        <li>Add adjustable text, app border and sidebar border colors. Improve contrast and visibility in the sidebar, top bar, footer, workspace switcher and theme menu, including dark mode.</li>
+        <li>Replace the duplicate reset and discard controls with a confirmed Reset section to defaults action. It saves defaults for the active section without resetting other sections; other settings retain their Save changes action.</li>
+        <li>Limit Customization navigation, direct access and server writes to workspace owners and admins. Remove custom CSS and JavaScript controls, and stop returning or injecting stored custom code in tenant sessions.</li>
+        <li>Add <code>20261014130000_white_label_border_colors.sql</code> for text and border overrides with a schema-cache reload. Other White Label settings can still save before this migration; saving non-empty new color overrides requires applying it.</li>
+        <li>Redirect signed-in users from the landing, Features, Pricing, About and Contact pages to the dashboard. Wait for browser auth before rendering marketing content, preventing the page flash on refresh and OAuth return.</li>
+        <li>Correct the Cloudflare Worker deploy command.</li>
+      </ul>
+      <p><strong>Upgrade note:</strong> Marketing content is now client-rendered; review search indexing after deployment. Production site behavior and database migrations still require live verification.</p>
+
+      <h3>Version 6.2.2</h3>
+      <p><em>Released October 13, 2026 · Reliability and workspace integrity update.</em></p>
+      <p>Version 6.2.2 improves inbox and contact reliability, campaign and drip workflows, integration persistence, billing workspace isolation and production startup.</p>
+      <p><strong>Inbox and contact reliability</strong></p>
+      <ul>
+        <li>Resolve Messenger recipient names and search imported contacts correctly; refresh inbox messages after separate-page sends and on polling or focus.</li>
+        <li>Clear incompatible conversation selections when changing channels or accounts, continue pagination through undated conversations, and preserve scalar contact names, phone numbers and email addresses during edits.</li>
+      </ul>
+      <p><strong>Campaigns and drip sequences</strong></p>
+      <ul>
+        <li>Keep campaign dialog actions accessible, surface upload and queue-stat errors, refresh private media URLs at delivery, and show stalled-queue diagnostics.</li>
+        <li>Add editable drip steps, checked activation, manual enrollment and future-contact welcome enrollment. Stage dispatch and enrollment updates transactionally with recipient eligibility checks and replay protection.</li>
+      </ul>
+      <p><strong>Integrations and OAuth</strong></p>
+      <ul>
+        <li>Use the canonical application origin and reuse exact signed callback URLs for social OAuth authorization and token exchange.</li>
+        <li>Add Google Workspace gateway administration, encrypted server-side credential persistence, workspace-scoped account restoration and checked connection actions. Scope installed integration metadata by user and workspace.</li>
+      </ul>
+      <p><strong>Billing integrity and workspace isolation</strong></p>
+      <ul>
+        <li>Save invoice and quote headers and lines atomically, preserving original content when validation or insertion fails.</li>
+        <li>Reject cross-workspace payment, document-line and product references at the database boundary. Recalculate both documents when moving payments or lines, restore payment states correctly and preserve shared deal totals.</li>
+      </ul>
+      <p><strong>Startup and compatibility</strong></p>
+      <ul>
+        <li>Stop the retired service-worker registration and reload loop while preserving unrelated workers and caches. Render the root error page without requiring the failed root query provider.</li>
+        <li>Correct the animation-module import, conversation account typing and integration dialog HTML semantics.</li>
+      </ul>
+      <p><strong>Upgrade and verification</strong></p>
+      <ul>
+        <li>Apply both 20261012 migrations with the matching application build. Existing historical billing workspace mismatches require separate review; these guards do not automatically repair old records.</li>
+        <li>Local verification passed 811 regression tests, 79 PostgreSQL checks, the full typecheck, the production build and four public browser smoke checks. Live OAuth, provider ingestion, campaign delivery and authenticated staging checks remain required.</li>
+        <li>Automatic drip enrollment currently covers future-contact welcome journeys; birthday, anniversary, no-reply and stalled-lead event integrations remain separate work.</li>
+      </ul>
+
+      <h3>Version 6.0.0</h3>
+      <p><em>Released October 2026 · Major reliability, integrations &amp; UX milestone.</em></p>
+
+      <p><strong>New integrations &amp; OAuth</strong></p>
+      <ul>
+        <li><strong>Google Workspace OAuth — fully implemented:</strong> replaced the "Not available yet" placeholder with a real OAuth popup flow backed by the Lovable App User Connector gateway. The connection dialog opens a popup, exchanges the code server-side, fetches the authenticated email via <code>/oauth2/v2/userinfo</code>, and upserts the token into <code>installed_integrations</code>. Disconnect is clean. Granted scopes: <code>gmail.readonly</code>, <code>gmail.send</code>, <code>drive.readonly</code>, <code>calendar</code>, <code>contacts.readonly</code>. Required env var: <code>GOOGLE_WORKSPACE_APP_USER_CONNECTOR_CLIENT_API_KEY</code>.</li>
+        <li><strong>Social Studio — redirect-URI guidance for TikTok &amp; LinkedIn:</strong> the OAuth channel-connection panel now surfaces the exact callback URL (<code>/api/public/social/callback</code>) that must be registered in TikTok Developer Portal and LinkedIn Developer App settings before initiating the OAuth flow, eliminating the most common "redirect_uri mismatch" error for these platforms.</li>
+      </ul>
+
+      <p><strong>Messaging &amp; inbox fixes</strong></p>
+      <ul>
+        <li><strong>Messenger unknown-contact names fixed:</strong> inbound Messenger messages no longer appear under a raw UUID. The webhook handler now calls the Graph API (<code>/v21.0/{sender_id}?fields=name</code>) to resolve the sender's display name and falls back to "Messenger user &lt;id&gt;" when the API is unavailable, preventing blank or UUID-labeled conversations in the inbox.</li>
+        <li><strong>Messenger webhook diagnostics — verify-token check:</strong> the Meta App status panel now includes a dedicated <strong>META_WEBHOOK_VERIFY_TOKEN stored</strong> diagnostic row. Administrators can immediately see whether the missing <code>META_WEBHOOK_VERIFY_TOKEN</code> (or legacy <code>MESSENGER_WEBHOOK_VERIFY_TOKEN</code>) environment variable is preventing the webhook subscription challenge from completing, with a step-by-step remedy.</li>
+        <li><strong>WhatsApp template wizard — Submit to Meta always visible:</strong> the template editor dialog was reworked from a single scrollable container to a <code>flex flex-col</code> layout with a <code>shrink-0</code> sticky footer, ensuring the "Submit to Meta" / "Save &amp; resubmit to Meta" button is always reachable regardless of screen height. The button was also renamed from "Save &amp; submit" for clarity. Previously the footer scrolled out of view on any screen shorter than the full form height.</li>
+        <li><strong>Template preview dialog — responsive sizing:</strong> the inbox template-preview dialog now applies <code>sm:max-w-4xl max-h-[90vh]</code>, preventing overflow on screens narrower than 1280 px.</li>
+      </ul>
+
+      <p><strong>E-commerce &amp; billing</strong></p>
+      <ul>
+        <li><strong>Shopify product sync — 250 products per page:</strong> the store-sync server function now uses the Shopify API maximum of 250 products per request (previously hardcoded to 100 for all platforms), reducing round-trips by 60 % for large catalogues. WooCommerce retains 100 (its own REST API maximum). The pagination cursor loop and Link-header parser were already correct and required no change.</li>
+        <li><strong>Billing documents — workspace currency displayed on load:</strong> the billing-documents route now reads currency via <code>useTenantCurrency()</code> with a <code>useEffect</code> sync guard instead of a one-shot <code>useState</code> initializer. ZAR, EUR, GBP, and any other non-USD workspace currency now appear correctly on first render without a hard refresh.</li>
+        <li><strong>PDF print — iframe clone approach:</strong> the <code>printDocument()</code> helper was rewritten to clone the printable node into a hidden iframe and call <code>contentWindow.print()</code>. The previous <code>window.print()</code> call produced blank pages or unstyled output because the main document's stylesheets were not available in the print context.</li>
+      </ul>
+
+      <p><strong>Booking &amp; marketing</strong></p>
+      <ul>
+        <li><strong>Booking module — Appointments tab opens first:</strong> the booking overview defaulted to the "Availability" tab on load. The <code>defaultValue</code> prop is now correctly set to <code>"appointments"</code>, matching user expectation that the primary view is the upcoming-appointments list.</li>
+        <li><strong>Drip sequences — Pause / Resume / Activate actions:</strong> the drip-sequence panel now renders a <code>SequenceActions</code> component for each row, surfacing contextual per-sequence actions: Pause (running), Resume (paused), and Activate (draft). The previous implementation showed a static placeholder with no controls.</li>
+      </ul>
+
+      <p><strong>Security &amp; correctness (backend)</strong></p>
+      <ul>
+        <li><strong>Webhook workspace scoping — cross-tenant receipt poisoning fixed:</strong> <code>processStatusEvent</code> in <code>webhook.server.ts</code> now receives the resolved <code>account</code> object and scopes every <code>message_outbox</code> and <code>messages</code> query to <code>workspace_id</code>. Previously a delivery receipt arriving on one workspace's webhook could update a message row belonging to a different tenant.</li>
+        <li><strong>Filter-injection via <code>.or()</code> fixed:</strong> raw string interpolation in the inbound-message deduplication query was replaced with a properly quoted filter, preventing a crafted <code>wamid</code> value from escaping the intended filter and matching arbitrary rows. The inbound duplicate check also now includes <code>workspace_id</code> so cross-workspace false-deduplication is impossible.</li>
+        <li><strong><code>applyWaMessageStatus</code> cross-workspace protection:</strong> the WA status handler in <code>wa-inbox.server.ts</code> now requires an explicit <code>workspaceId</code> parameter and scopes its update query accordingly, preventing a QR-webhook delivery event on workspace A from silently marking a message as "read" in workspace B.</li>
+        <li><strong>Scheduler double-dispatch race fixed:</strong> the drip-sequence / scheduled-message processor in <code>scheduler.server.ts</code> was replaced with an atomic <code>UPDATE  SET status='processing'  RETURNING *</code> claim step. Two concurrent worker instances can no longer both read the same "pending" row and dispatch the same message twice.</li>
+        <li><strong>AI conversation stream — <code>overrideConfig</code> allowlisted:</strong> the <code>/api/ai/conversation-stream</code> route previously accepted any key under <code>overrideConfig</code>. It is now restricted to <code>language</code> and <code>tone</code> only; attempts to inject <code>model</code>, tool-call config, or other keys are silently discarded, closing a prompt-injection escalation path.</li>
+        <li><strong>Workflow-queue and analyze.server hooks — <code>supabaseAdmin</code> enforced:</strong> two server-side hook handlers (<code>workflow-queue.ts</code> and <code>analyze.server.ts</code>) were constructing a raw Supabase client with the service-role key, bypassing the demo-mode write guard. Both now use the centralised <code>supabaseAdmin</code> singleton so demo instances cannot be written to through these paths.</li>
+        <li><strong>Billing — <code>previewPlanChange</code> auth gate added:</strong> <code>plan-change.functions.ts</code> was missing the <code>assertOrgAdmin</code> check. A non-admin workspace member could previously call the preview endpoint and observe pricing data for plans above their current entitlement. The check is now the first operation in the function.</li>
+        <li><strong>Coupon redemption — race condition fixed:</strong> the invoice engine replaced a racy read-modify-write (<code>SELECT  UPDATE</code> in two round-trips) with a single optimistic conditional <code>UPDATE  WHERE remaining_uses &gt; 0 RETURNING *</code>. High-concurrency checkout flows can no longer over-redeem a limited coupon.</li>
+        <li><strong>Sales realtime subscriptions — <code>workspace_id</code> filtered:</strong> the <code>use-sales-realtime.ts</code> hook's Supabase Realtime subscriptions on <code>quote_line_items</code> and <code>invoice_line_items</code> lacked a <code>workspace_id</code> filter. Any line-item change anywhere on the platform would trigger UI refreshes for every active sales tab across all tenants. Both subscriptions now carry an explicit <code>workspace_id = eq.&lt;id&gt;</code> filter.</li>
+      </ul>
+
+      <p><strong>Builder &amp; widget fixes</strong></p>
+      <ul>
+        <li><strong>Flow Builder &amp; Chatbot Builder — sidebar auto-collapse:</strong> opening the Flow Builder or Chatbot Builder now automatically collapses the main application sidebar, giving the full viewport width to the builder canvas. Closing the builder restores the sidebar to its previous state. Previously the sidebar remained open and overlapped the builder at smaller viewport widths.</li>
+        <li><strong>Live Chat widget — session reuse hardened:</strong> the widget runtime now stores <code>visitorKey</code> and <code>session token</code> as separate local-storage keys and validates both independently on page reload. A stale or mismatched token no longer causes the widget to silently fail to reconnect; it starts a fresh session instead. Covered by the full 704-test widget suite.</li>
+        <li><strong>Tenant accent-colour — foreground always white:</strong> <code>accentForeground()</code> in <code>accent-color.ts</code> now unconditionally returns <code>#ffffff</code>. Previously the function ran a contrast calculation that could return near-black on mid-tone brand colours (e.g. <code>#D81C20</code>), and a CSS variable injection at runtime would override the static stylesheet's white, making button labels and badge text illegible. Contrast is now maintained by <code>accentStrong()</code> darkening the fill, not by darkening the text.</li>
+      </ul>
+
+      <p><strong>Demo &amp; onboarding</strong></p>
+      <ul>
+        <li><strong>Demo seed data — two realistic workspaces:</strong> fresh installations now receive pre-seeded demo data for both built-in accounts. The <em>agent@demo.com</em> workspace ("Wellness Hub") includes 12 conversations and 37 messages across WhatsApp, Messenger, and Live Chat channels with realistic health-and-wellness scenarios. The <em>user@demo.com</em> workspace ("Northbridge Goods") includes 12 conversations and 35 messages covering e-commerce support scenarios. Evaluators and new team members can explore every inbox and CRM feature without needing to generate test traffic.</li>
+      </ul>
+
+      <p><strong>Developer quality &amp; React correctness</strong></p>
+      <ul>
+        <li><strong>Hook scope fixes across 7 files:</strong> <code>useZonedDateFormatter</code> and <code>useTenantCurrency</code> calls that were conditionally invoked inside callbacks, event handlers, or nested functions were lifted to unconditional component top-level scope. This eliminates "rendered more hooks than previous render" runtime errors in the booking calendar, billing documents route, and related views, and brings every affected component into compliance with the React Rules of Hooks.</li>
+        <li><strong>Zero TypeScript errors maintained:</strong> all changes ship with <code>0</code> <code>tsc --noEmit</code> errors. Strict-mode compilation confirmed after each fix.</li>
+      </ul>
+
+      <h3>Version 5.0.0</h3>
+
+      <p><strong>Rebrand — WACRM end to end</strong> <span class="badge">5.0.0</span></p>
+      <ul>
+        <li>App-wide sweep: 500+ retired-brand references replaced across 130+ files, including the SDK/CLI package name (<code>@wacrm/sdk</code>, <code>@wacrm/cli</code>), the outbound webhook signature header (<code>x-wacrm-signature</code>), the public API host, environment variable prefixes, the mobile app's bundle identifier and package name, the Docker image name, and the nginx site config.</li>
+        <li>Fixed two pages left broken by an earlier, incomplete rebrand pass: the homepage meta title and the About page description had the brand name silently deleted rather than replaced — both now interpolate the brand name correctly.</li>
+        <li>Canonical, share-link and Open Graph URLs that pointed at a placeholder preview address now point at the real production domain.</li>
+        <li><strong>Database rebrand:</strong> the platform-wide brand name setting, workspace white-label overrides, marketplace plugin publisher names, integration docs URLs and taglines, plugin category copy, a stray column default, and two pg_cron scheduled job names all now read WACRM.</li>
+        <li>The documentation portal — this changelog, the docs index, status and support pages, including the header logo mark — reads WACRM throughout.</li>
+        <li>Browser storage keys fold forward automatically from either retired brand namespace into the current one on first load (storage schema bumped), so active organization, workspace, favorites and preferences survive the upgrade with nothing for the user to redo.</li>
+        <li>The legacy-brand template scanner (Super Admin &rarr; notification template preview) and the outbound-branding and database rebrand CI guards were updated to flag the retired names instead of the current one, so stale copy can't quietly creep back in.</li>
+      </ul>
+
+      <p><strong>Channel picker redesign</strong></p>
+      <ul>
+        <li>The inbox &ldquo;Reply via&rdquo; channel switcher, the inbox's channel/account selector, the contact timeline's channel filter, and the &ldquo;link a channel identity&rdquo; dialog now render every channel as a colored icon chip instead of a flat, uncolored icon.</li>
+        <li>The shared channel icon component gained a boxed chip variant plus coverage for Live Chat, Discord, Slack and Teams, so every picker in the app draws from one consistent, branded palette.</li>
+      </ul>
+
+      <p><strong>Release</strong></p>
+      <ul>
+        <li>Version bumped to 5.0.0 across the app, this documentation portal, the release manifest, the downloadable PDF release notes, Docker Compose defaults, and the marketplace listing.</li>
+      </ul>
+
+      <h3>Version 4.8.8</h3>
+      <ul>
+        <li><strong>Security &amp; RLS hardening:</strong> fixed a PostgREST filter-injection path, restricted <code>billing_documents</code> deletes, locked down <code>public.settings</code>, and tightened policies on <code>payment_methods</code>, <code>billing_document_templates</code>, and <code>workspace_invitations</code> so invite tokens are readable only by an admin or the invitee.</li>
+        <li><code>SECURITY DEFINER</code> functions audited and pinned to a fixed <code>search_path</code>, licensing logic isolated, and administrative functions refactored to verify the caller before doing privileged work.</li>
+        <li>Rate-limiting restored for <code>vcard_views</code>, social channel tokens moved behind column-level grants, and an XSS sink in the public footer removed.</li>
+        <li>New RLS regression suites: a DB-free static migration policy guard plus a live per-role harness that mints ephemeral users for every organization and workspace role, covering insert/update/delete on billing templates, invite-token privacy, and cross-tenant denial for every role.</li>
+        <li>Automated security scans wired into CI so new findings block merges.</li>
+        <li><strong>Developer Center RBAC:</strong> navigation entries and sensitive actions are hidden for users without the required organization role — not just blocked by route guards — with <code>requireOrgRole</code> loader guards and integration tests asserting 403 behaviour.</li>
+        <li>The 403 page now names the missing organization role and links to team &amp; roles so users can request access.</li>
+        <li>In-app organization switcher for the Developer Center and org-scoped API key management with selectable scopes.</li>
+        <li><strong>WhatsApp Forms (Meta Flows)</strong> end to end: publishing, a composer picker, and <code>nfm_reply</code> ingestion, plus centralized WhatsApp Catalog logic.</li>
+        <li>Friendly error messages when publishing a form or sending from the composer fails, translating raw Meta and backend errors into actionable guidance.</li>
+        <li>Organization settings load reactively, Super Admin brand leaks fixed, Billing portal empty states corrected, and Developer Center / Booking overview crashes resolved.</li>
+        <li>Faster builds: incremental TypeScript compilation and query typing fixes cut warm typechecks to seconds.</li>
+      </ul>
+
+      <h3>Version 4.2.2</h3>
+      <ul>
+        <li>The product is now WACRM end to end — app UI, documentation portal, changelog, deployment manifests, SDK/CLI package names, and stored marketplace copy — with browser storage keys migrated automatically so active organization, workspace, and preferences survive the rename.</li>
+        <li>Fixed outbound messages stalling in “queued”: composite WhatsApp thread keys now resolve to the correct recipient, with automatic retry for messages stuck longer than 20 seconds.</li>
+        <li>Unsupported WhatsApp media types (WebP images, WebM audio) are delivered as documents instead of failing with a media upload error; voice notes record as OGG/Opus.</li>
+        <li>Attachments and downloads work across the app — outbound media creates attachment records visible in the conversation, media lightbox, and CRM profile, with blob-based downloads plus an explicit error state and retry.</li>
+        <li>Inbox sync status consolidated into a single info popover showing last sync time, duration, item counts, and recent runs.</li>
+        <li>Sidebar menus behave as an accordion: one section open at a time, state persisted across navigation, with smooth collapse and expand animations.</li>
+        <li>Automated security scanning in CI, plus audited agent, user, and RLS coverage across the platform.</li>
+      </ul>
+
+      <h3>Version 4.0.0</h3>
+      <ul>
+        <li>Subscription plans are now fully linked to payment gateways: per-plan price/product mapping, workspace-level overrides, environment-aware resolution, and an admin "verify mappings" action that syncs live from the gateway API.</li>
+        <li>Billing webhooks normalize Stripe and Paddle events into a single router that keeps subscription status, renewals, and cancellations in sync automatically, with signature verification and a replay tool for failed deliveries.</li>
+        <li>Full upgrade/downgrade flow — plan change wizard, checkout hand-off, entitlement refresh on return, and a billing settings page with invoices and subscription history.</li>
+        <li>Redesigned marketing site: new landing page, live pricing driven by real plans, monthly/yearly toggle, plan comparison table, current-plan badges, and smooth in-page scrolling.</li>
+        <li>WhatsApp templates enforce strictly numbered placeholders ({{1}}, {{2}}); named variables are auto-converted on import with a field-by-field preview, plus URL button query/fragment parameter mapping.</li>
+        <li>Version 4.0.0 consolidates the 3.9.x billing and platform work into the first fully self-serve release: sign up, pick a plan, pay, and get entitlements without admin involvement.</li>
+      </ul>
+
+
+      <h3>Version 3.9.0</h3>
+      <ul>
+        <li>Super Admin consoles for AI providers and payment gateways, including credential storage with column-level protection, connection tests, and a gateway health widget.</li>
+        <li>Platform audit logging for every gateway and plan-linkage change, plus a webhook delivery health panel with per-event status.</li>
+        <li>Plan &rarr; gateway price mapping (<code>plan_gateway_prices</code>) with workspace-level overrides, environment-aware resolution, and server-side conflict detection for duplicate mappings.</li>
+        <li>Localization rebuilt for 100+ languages with full RTL support and generated locale data.</li>
+        <li>Platform Settings: General, Branding, Maintenance mode, and feature flags now apply globally at runtime.</li>
+        <li>Drag-and-drop uploads for logo, favicon, and PWA icons backed by a private branding bucket with a streaming public endpoint.</li>
+        <li>Accessible accent-colour engine — contrast is measured and adjusted instead of blocking the save.</li>
+      </ul>
+
+      <h3>Version 3.8.9</h3>
+      <ul>
+        <li>WhatsApp templates can be picked, previewed, and sent directly from the Inbox, with markdown-accurate bubble previews and manual Meta sync.</li>
+        <li>Template parameter editor with auto-suggested values from the contact/CRM record, reusable saved presets, and strict inline validation that blocks invalid sends.</li>
+        <li>Friendly Meta delivery error mapping (including #131030 recipient-not-allowed) with retry suppression for unrecoverable failures.</li>
+        <li>Meta App settings screen for App ID/Secret with live connection verification, plus a Facebook Pages manager showing Messenger capability status and safe disconnect/reconnect.</li>
+        <li>Multi-bot Telegram support — several bots per workspace, each as an independent Inbox account with its own webhook and outbound token.</li>
+        <li>Unified Inbox fixes: correct contact/conversation mapping for Telegram ingest, webhook idempotency, and a double-increment unread-count bug removed (DB trigger now owns unread state).</li>
+        <li>Realtime outbound updates and monotonic delivery-status guard so “read” can never regress to “sent” on out-of-order receipts.</li>
+        <li>Live Chat widget: unified realtime status line, Supabase broadcast updates, required pre-chat fields, and fixed agent handoff/assignment.</li>
+        <li>Security: tightened RLS across API keys, OAuth clients, webhooks, meeting credentials, and WhatsApp catalog; template RBAC with full audit logging; extensions moved out of <code>public</code>; CI blocks merges on new scan findings.</li>
+        <li>UI consistency: standardized <code>h-8 w-8</code> icon buttons app-wide and default accent locked to <code>#D81C20</code>.</li>
+      </ul>
+
+      <h3>Version 3.8.8</h3>
+      <ul>
+        <li>App-wide realtime with burst deduplication, coalesced query invalidation, and exponential-backoff reconnection.</li>
+        <li>Inbox sync settings with background refetch, and a media lightbox for images, video, and documents.</li>
+        <li>CRM contact identity and cache keys unified so profile edits propagate everywhere instantly.</li>
+        <li>E.164 phone validation for WhatsApp template sends and template version history.</li>
+      </ul>
+
+      <h3>Version 3.8.7</h3>
+      <ul>
+        <li>Conversation transcript export and cross-platform typing indicators.</li>
+        <li>Agent notifications for assignment, handoff, and SLA breaches.</li>
+        <li>Flow Builder workspace security — loader-level access guards with live revocation and no data reads on denied opens.</li>
+        <li>TypeScript build performance work; typecheck time reduced from timeout to roughly 35 s.</li>
+      </ul>
+
+      <h3>Version 3.8.6</h3>
+      <ul>
+        <li>Email and SMS channel accounts added to the omnichannel model.</li>
+        <li>Thread deduplication and hardened conversation merging to stop duplicate chats.</li>
+        <li>Live Chat widget requires contact details before starting, with fixed media rendering.</li>
+        <li>RLS corrections for contact re-match jobs, inbox agent assignment, and mobile AI endpoints.</li>
+        <li>Security CI gate blocking merges on new scan findings; database extensions moved to an <code>extensions</code> schema.</li>
+      </ul>
+
+      <h3>Version 3.4.6</h3>
+      <ul>
+        <li>Production-ready Setup Wizard (6 steps) with server-side lock and route guards.</li>
+        <li>Centralized Environment Mode System (Demo vs Production) with <code>demoWriteGuard</code>.</li>
+        <li>Enterprise PWA with dynamic manifest, custom service worker, and admin-controlled icons.</li>
+        <li>Responsive navigation — full sidebar &gt; 1200 px, mini rail 768–1200 px, drawer &lt; 768 px.</li>
+        <li>Security hardening — XSS remediation, CSP headers, HIBP password check, RLS enforcement.</li>
+        <li>Auth listener filtered — no more hourly router thrashing on <code>TOKEN_REFRESHED</code>.</li>
+        <li>Overhauled documentation portal with sidebar nav, search, and syntax highlighting.</li>
+      </ul>
+
+      <h3>Version 3.4.0</h3>
+      <ul>
+        <li>WhatsApp Cloud API provider abstraction, webhook processing, and template sync.</li>
+        <li>AI Chatbot Builder, Live Chat Widget, and Helpdesk module.</li>
+        <li>Stripe billing, SaaS plan management, and revenue snapshots.</li>
+      </ul>
+
+      <h3>Version 3.3.3</h3>
+      <ul>
+        <li>Project Documentation System v1.</li>
+        <li>Node.js 22 deployment support for cPanel/LiteSpeed.</li>
+        <li>Swapped <code>xlsx</code> for SheetJS CDN (CVE mitigation).</li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 WACRM · v6.8.9 · Built by <a href="https://wrapcoders.com/" target="_blank" rel="noopener">WRAPCODERS</a></div>
+      <div>
+        <a href="./index.html">Docs</a> ·
+        <a href="./changelog.html">Changelog</a> ·
+        <a href="./status.html">Status</a> ·
+        <a href="./support.html">Support</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>

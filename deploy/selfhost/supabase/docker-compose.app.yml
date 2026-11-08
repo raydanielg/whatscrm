@@ -1,0 +1,70 @@
+# WACRM app + nginx, layered on top of the self-hosted Supabase stack.
+# Activated automatically via COMPOSE_FILE in .env:
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.app.yml
+#
+# Optional extras:
+#   docker compose --profile qr up -d   # WhatsApp QR (Baileys) worker
+
+services:
+  app:
+    container_name: wacrm-app
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${SUPABASE_PUBLIC_URL}
+        VITE_SUPABASE_PUBLISHABLE_KEY: ${ANON_KEY}
+        VITE_APP_ENV: production
+        VITE_APP_MODE: production
+        APP_VERSION: ${WACRM_VERSION:-6.8.9}
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/public/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  proxy:
+    container_name: wacrm-proxy
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  # Optional: stateful WhatsApp QR worker (Baileys).
+  # Enable with: docker compose --profile qr up -d
+  qr-worker:
+    profiles: ["qr"]
+    container_name: wacrm-qr-worker
+    build:
+      context: ../../../qr-worker
+      dockerfile: Dockerfile
+    env_file:
+      - .env.production
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8787
+      WA_AUTH_DIR: /data/auth
+      WACRM_WEBHOOK_URL: http://app:3000/api/public/whatsapp/qr-webhook
+    volumes:
+      - qr-auth:/data
+    restart: unless-stopped
+
+volumes:
+  qr-auth:

@@ -1,0 +1,23 @@
+# Netlify build config. Must live at the repo root (Netlify ignores it in public/).
+#
+# The app is server-rendered (TanStack Start + Nitro). Nitro's `netlify` preset
+# (selected in vite.config.mts when NETLIFY=true) emits the SSR / server-function /
+# API handler as a Netlify Function and the static assets into `dist`, and writes
+# the routing rules itself. Do NOT add a `/* -> /index.html` SPA rewrite: it would
+# send /_serverFn/* and /api/* (webhooks, cron hooks) to the homepage.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Explicit so the SSR Netlify Function is always emitted, even for builds run
+  # outside Netlify's own CI (e.g. `netlify deploy --build`).
+  NITRO_PRESET = "netlify"
+  # Baked into the client bundle at build time — must be set before the build.
+  APP_MODE = "demo"
+  VITE_APP_MODE = "demo"
+
+# Serverless functions have a hard time limit (10s default, 26s max on most plans).
+# Scheduled-job endpoints under /api/public/hooks/* should finish inside it.

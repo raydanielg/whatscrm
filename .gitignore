@@ -1,0 +1,77 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+.output
+.netlify
+.vercel
+.vinxi
+.tanstack/**
+.nitro
+*.local
+
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Deployment env files (never commit real secrets)
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.*.local
+!.env.example
+deploy/certs/*
+!deploy/certs/.gitkeep
+
+# Test artifacts
+coverage
+test-results
+playwright-report
+playwright/.cache
+
+*.tsbuildinfo
+.tscache
+
+# Migration recovery snapshots (temporary, may contain sensitive dumps)
+.migration-recovery/
+
+# Local sync tooling (not part of the project)
+auto-pull.ps1
+auto-pull.sh
+auto-sync.ps1
+auto-sync.sh
+SYNC-TEST.md
+# Local review frames can include provider credentials visible in recordings.
+client-feedback/2026-10-09/video-*/frame-*.jpg
+client-feedback/2026-10-09/video-*/sheet-*.jpg
+tmp/feedback-review/
+tmp/codex-local-stt/
+tmp/codex-video-review/
+tmp/npm-cache/
+tmp/codex-audio-extract.mjs
+tmp/codex-gemini-transcribe.mjs
+tmp/codex-local-transcribe.ps1
+tmp/codex-make-video-sheets.ps1
+tmp/codex-transcribe-videos.mjs
+tmp/codex-video-review.mjs

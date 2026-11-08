@@ -1,0 +1,1 @@
+UPDATE public.payment_gateway_settings SET enabled = false WHERE provider_id = 'paddle';

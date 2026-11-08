@@ -1,0 +1,1 @@
+DELETE FROM public.marketing_leads WHERE work_email = 'amira@acme-test.io';

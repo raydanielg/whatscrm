@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/lib/project-management/**/*.ts",
+    "src/components/app/project-management/**/*.tsx",
+    "src/routes/_authenticated/projects*.tsx",
+    "src/routeTree.gen.ts"
+  ],
+  "compilerOptions": {
+    "incremental": false,
+    "types": ["vite/client", "node"]
+  }
+}

@@ -1,0 +1,3 @@
+UPDATE public.marketplace_integrations SET docs_url = replace(docs_url, 'wadiff', 'swiffer') WHERE docs_url ILIKE '%wadiff%';
+UPDATE public.marketplace_integrations SET tagline = replace(replace(tagline, 'Wadiff', 'Swiffer'), 'wadiff', 'swiffer') WHERE tagline ILIKE '%wadiff%';
+UPDATE public.plugin_categories SET description = replace(replace(description, 'Wadiff', 'Swiffer'), 'wadiff', 'swiffer') WHERE description ILIKE '%wadiff%';

@@ -1,0 +1,19 @@
+GRANT SELECT ON public.plugins TO anon;
+GRANT SELECT ON public.plugin_versions TO anon;
+GRANT SELECT ON public.plugin_reviews TO anon;
+
+INSERT INTO public.plugins
+  (slug, name, tagline, description, category, tags, publisher_id, publisher_name,
+   pricing_model, price_cents, currency, is_public, is_verified, is_featured, status)
+VALUES
+  ('whatsapp-cloud-api','WhatsApp Cloud API','Official Meta WhatsApp messaging, templates and media for your inbox.','Connect your WhatsApp Business number through the official Meta Cloud API. Includes template management, media uploads, delivery status tracking and an enterprise outbox with retries.','whatsapp',ARRAY['whatsapp','messaging','meta'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',4900,'USD',true,true,true,'published'),
+  ('social-studio','Social Studio Scheduler','Schedule and auto-post to Facebook, Instagram, X, Threads, TikTok and YouTube.','Composer with per-platform previews, approval queue, bulk publishing, post library and a performance tab with impressions, clicks and shares.','marketing',ARRAY['social','scheduler','instagram','x'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',3900,'USD',true,true,true,'published'),
+  ('ai-assistant','AI Assistant','AI replies, summaries and lead scoring across every channel.','Bring your own model or use the built-in gateway. Drafts replies, summarises threads, scores leads and routes conversations.','ai',ARRAY['ai','automation'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',2900,'USD',true,true,true,'published'),
+  ('workflow-builder','No-Code Workflow Builder','Visual automations for CRM, messaging and marketing.','Drag-and-drop flow builder with triggers, conditions, delays and channel actions, plus run history and permissions.','automation',ARRAY['automation','workflow'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','one_time',19900,'USD',true,true,false,'published'),
+  ('live-chat-widget','Live Chat Widget','Embeddable website chat that lands in the unified inbox.','Customisable widget with pre-chat form, typing indicators, transcripts and agent handoff.','crm',ARRAY['livechat','support'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','free',0,'USD',true,true,false,'published'),
+  ('appointment-booking','Appointment Booking','Public booking pages, reminders and calendar sync.','Share a booking link, collect appointments, send WhatsApp/email reminders and manage the calendar from the app.','utilities',ARRAY['booking','calendar'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',1900,'USD',true,true,false,'published'),
+  ('client-portal','Client Portal','A branded portal for quotes, invoices and files.','Give customers a login to view quotes, pay invoices, download files and message your team.','commerce',ARRAY['portal','invoices'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',2400,'USD',true,false,false,'published'),
+  ('bi-analytics','BI & Analytics','Dashboards, cohorts and revenue reporting.','Cross-channel analytics with saved dashboards, funnel and cohort reports and scheduled exports.','analytics',ARRAY['analytics','reporting'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','one_time',14900,'USD',true,false,false,'published'),
+  ('helpdesk','Helpdesk & Ticketing','SLAs, queues and macros on top of the inbox.','Convert conversations into tickets with SLA timers, priorities, queues, macros and CSAT.','crm',ARRAY['helpdesk','support'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',3400,'USD',true,false,false,'published'),
+  ('whatsapp-commerce','WhatsApp Commerce','Catalog, cart and checkout inside WhatsApp.','Sync a product catalog, share products in chat and take orders and payments without leaving WhatsApp.','commerce',ARRAY['commerce','whatsapp'],'178efaaa-bd5e-47a3-aaa4-9d6685cace44','Swiffer','subscription',4400,'USD',true,false,false,'published')
+ON CONFLICT (slug) DO NOTHING;

@@ -1,0 +1,12 @@
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.automations TO authenticated;
+GRANT ALL ON public.automations TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflow_versions TO authenticated;
+GRANT ALL ON public.workflow_versions TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflow_variables TO authenticated;
+GRANT ALL ON public.workflow_variables TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflow_runs TO authenticated;
+GRANT ALL ON public.workflow_runs TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflow_run_steps TO authenticated;
+GRANT ALL ON public.workflow_run_steps TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflow_queue TO authenticated;
+GRANT ALL ON public.workflow_queue TO service_role;

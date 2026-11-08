@@ -1,0 +1,13 @@
+# Staging overrides — merge on top of docker-compose.yml.
+# Usage: docker compose -f docker-compose.yml -f docker-compose.staging.yml --env-file .env.staging up -d
+services:
+  app:
+    image: wacrm/app:${WACRM_VERSION:-6.8.9-staging}
+    env_file:
+      - .env.staging
+    environment:
+      NODE_ENV: production
+      VITE_APP_ENV: staging
+      LOG_LEVEL: debug
+    deploy:
+      replicas: 1

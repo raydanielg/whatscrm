@@ -1,0 +1,1 @@
+ALTER TABLE public.chatbot_sessions ADD COLUMN IF NOT EXISTS flow_state jsonb;

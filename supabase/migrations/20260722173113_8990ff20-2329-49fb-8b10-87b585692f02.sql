@@ -1,0 +1,1 @@
+ALTER TABLE public.chat_widgets ADD COLUMN IF NOT EXISTS schedule jsonb NOT NULL DEFAULT '{"enabled":false}'::jsonb;

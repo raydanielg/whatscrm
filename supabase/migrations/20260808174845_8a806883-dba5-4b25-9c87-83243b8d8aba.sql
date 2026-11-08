@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "ws manage wa_collections" ON public.wa_catalog_collections;

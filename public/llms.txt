@@ -1,0 +1,9 @@
+# WACRM
+
+> The AI-powered WhatsApp CRM platform for sales, support, marketing, and automation. Self-hosted, multi-tenant, enterprise-ready.
+
+WACRM is a modern WhatsApp CRM built for teams that live on WhatsApp. It combines a shared inbox, contacts CRM, broadcast campaigns, automation workflows, and an AI Studio (reply suggestions, thread summaries, chatbot builder, campaign copy) into a single platform. Provider-agnostic (Meta Cloud API, on-prem, or mock), multi-tenant workspaces, role-based access, and self-hosting via Docker.
+
+## Pages
+- [Home](/): Product overview, features, pricing, and call to action.
+- [Sign in / Sign up](/auth): Access your WACRM workspace.
