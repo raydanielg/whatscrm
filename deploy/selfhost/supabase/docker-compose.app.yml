@@ -23,6 +23,9 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 3000
+    depends_on:
+      api-gw:
+        condition: service_started
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/public/health || exit 1"]

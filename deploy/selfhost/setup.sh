@@ -108,10 +108,13 @@ VITE_APP_MODE=production
 VITE_APP_ENV=production
 LOG_LEVEL=info
 
-# Supabase (self-hosted on this VPS)
+# Supabase (self-hosted on this VPS).
+# Server-side calls go through the internal docker network (api-gw) —
+# hairpin NAT to the public IP does not work from inside containers.
+# The browser still uses VITE_SUPABASE_URL (public IP).
 VITE_SUPABASE_URL=${SB_URL}
 VITE_SUPABASE_PUBLISHABLE_KEY=${ANON_KEY_VAL}
-SUPABASE_URL=${SB_URL}
+SUPABASE_URL=http://api-gw:8000
 SUPABASE_PUBLISHABLE_KEY=${ANON_KEY_VAL}
 SUPABASE_SERVICE_ROLE_KEY=${SERVICE_KEY_VAL}
 
@@ -150,7 +153,7 @@ set_prod() {
 }
 set_prod APP_ORIGIN "$APP_URL"
 set_prod VITE_SUPABASE_URL "$SB_URL"
-set_prod SUPABASE_URL "$SB_URL"
+set_prod SUPABASE_URL "http://api-gw:8000"
 set_prod VITE_SUPABASE_PUBLISHABLE_KEY "$ANON_KEY_VAL"
 set_prod SUPABASE_PUBLISHABLE_KEY "$ANON_KEY_VAL"
 set_prod SUPABASE_SERVICE_ROLE_KEY "$SERVICE_KEY_VAL"
