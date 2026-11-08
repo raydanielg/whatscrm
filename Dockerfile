@@ -7,6 +7,8 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 RUN corepack enable && apk add --no-cache libc6-compat
 COPY package.json .npmrc bun.lock* package-lock.json* pnpm-lock.yaml* yarn.lock* ./
+# postinstall runs node scripts/install-fast-tsc.mjs — it must exist at this stage
+COPY scripts ./scripts
 RUN --mount=type=cache,target=/root/.npm \
     if [ -f bun.lock ]; then npm i -g bun && bun install --frozen-lockfile; \
     elif [ -f pnpm-lock.yaml ]; then corepack prepare pnpm@latest --activate && pnpm i --frozen-lockfile; \
